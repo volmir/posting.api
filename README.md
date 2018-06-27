@@ -18,7 +18,7 @@ curl -i -X POST http://posting.local/v1/posts -d '{"title":"Post title name","co
 curl -i -X POST http://posting.local/v1/posts --data "title=Post title&content=Content text"
 curl -i -X PUT http://posting.local/v1/posts/2 -d '{"title":"Another post name","content":"Another value of field type must be part of list: blue, red, green"}'
 curl -i -X PATCH http://posting.local/v1/posts/2 -d '{"title":"Some post title"}'
-curl -i -X DELETE http://posting.local/v1/posts/2
+curl -i -X DELETE http://posting.local/v1/posts/8
 ```
 
 **AJAX API URL's call examples**
@@ -29,6 +29,6 @@ $.ajax({url: 'http://posting.local/v1/posts/1', method: 'GET', dataType: 'json',
 $.ajax({url: 'http://posting.local/v1/posts', method: 'POST', data: {"title":"Another post name","content":"Another value of field type must be part of list: blue, red, green"}, dataType: 'json', success: function(response){console.log('response:', response)}})
 $.ajax({url: 'http://posting.local/v1/posts/2', method: 'PUT', data: {"title":"Another post name","content":"Another value of field type must be part of list: blue, red, green"}, dataType: 'json', success: function(response){console.log('response:', response)}})
 $.ajax({url: 'http://posting.local/v1/posts/2', method: 'PATCH', data: {title: "Some post title"}, dataType: 'json', success: function(response){console.log('response:', response)}})
-$.ajax({url: 'http://posting.local/v1/posts/2', method: 'DELETE', dataType: 'json', success: function(response){console.log('response:', response)}})
+$.ajax({url: 'http://posting.local/v1/posts/8', method: 'DELETE', dataType: 'json', success: function(response){console.log('response:', response)}})
 ```
 
