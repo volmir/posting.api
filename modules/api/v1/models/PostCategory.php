@@ -18,7 +18,7 @@ class PostCategory extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'posts_vs_categories';
+        return 'post_vs_category';
     }
 
     /**

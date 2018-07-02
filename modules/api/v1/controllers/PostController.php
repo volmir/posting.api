@@ -39,7 +39,7 @@ class PostController extends Controller {
                 ],
             ],
         ]);
-    }    
+    }
 
     /**
      * Renders the index view for the module
@@ -52,7 +52,7 @@ class PostController extends Controller {
             $this->post();
         } elseif (Yii::$app->request->method == 'PUT') {
             $this->put();
-        } elseif (Yii::$app->request->method == 'PUT') {
+        } elseif (Yii::$app->request->method == 'PATCH') {
             $this->patch();
         } elseif (Yii::$app->request->method == 'DELETE') {
             $this->delete();
@@ -91,19 +91,82 @@ class PostController extends Controller {
             Yii::$app->response->statusCode = 400;
             $this->result = 'Bad Request';
         }
-        
     }
 
     private function put() {
-        $this->result = 'PUT';
+        $data = Yii::$app->request->post();
+        if ($this->id > 0 && !empty($data['title']) && !empty($data['content'])) {
+            $post = Post::find()
+                    ->where(['id' => $this->id])
+                    ->one();
+            if ($post instanceof Post) {
+                $post->title = $data['title'];
+                $post->content = $data['content'];
+
+                if ($post->save()) {
+                    $this->result = 'Success';
+                } else {
+                    Yii::$app->response->statusCode = 400;
+                    $this->result = 'Bad Request';
+                }
+            } else {
+                Yii::$app->response->statusCode = 404;
+                $this->result = 'Not found';
+            }
+        } else {
+            Yii::$app->response->statusCode = 400;
+            $this->result = 'Bad Request';
+        }
     }
 
     private function patch() {
-        $this->result = 'PATCH';
+        $data = Yii::$app->request->post();
+        if ($this->id > 0 && (!empty($data['title']) || !empty($data['content']))) {
+            $post = Post::find()
+                    ->where(['id' => $this->id])
+                    ->one();
+            if ($post instanceof Post) {
+                if (!empty($data['title'])) {
+                    $post->title = $data['title'];
+                }
+                if (!empty($data['content'])) {
+                    $post->content = $data['content'];
+                }
+
+                if ($post->save()) {
+                    $this->result = 'Success';
+                } else {
+                    Yii::$app->response->statusCode = 400;
+                    $this->result = 'Bad Request';
+                }
+            } else {
+                Yii::$app->response->statusCode = 404;
+                $this->result = 'Not found';
+            }
+        } else {
+            Yii::$app->response->statusCode = 400;
+            $this->result = 'Bad Request';
+        }
     }
 
     private function delete() {
-        $this->result = 'DELETE';
+        if ($this->id > 0) {
+            $post = Post::findOne($this->id);
+            if ($post instanceof Post) {
+                if ($post->delete()) {
+                    $this->result = 'Success';
+                } else {
+                    Yii::$app->response->statusCode = 400;
+                    $this->result = 'Bad Request';
+                }
+            } else {
+                Yii::$app->response->statusCode = 404;
+                $this->result = 'Not found';
+            }
+        } else {
+            Yii::$app->response->statusCode = 400;
+            $this->result = 'Bad Request';
+        }
     }
 
 }
