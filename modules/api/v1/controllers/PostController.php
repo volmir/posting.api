@@ -5,6 +5,8 @@ namespace app\modules\api\v1\controllers;
 use Yii;
 use yii\web\Controller;
 use app\modules\api\v1\models\Post;
+use app\modules\api\v1\models\Authentification;
+use app\modules\api\v1\models\ApiException;
 
 class PostController extends Controller {
 
@@ -12,7 +14,7 @@ class PostController extends Controller {
      *
      * @var int
      */
-    private $page_limit = 50;
+    private $page_limit = 10;
 
     /**
      *
@@ -22,23 +24,25 @@ class PostController extends Controller {
 
     public function init() {
         $this->enableCsrfValidation = false;
+        Authentification::verify();        
     }
 
     /**
      * @inheritdoc
      */
     public function behaviors() {
-        return array_merge(parent::behaviors(), [
-            'corsFilter' => [
-                'class' => \yii\filters\Cors::className(),
-                'cors' => [
-                    'Origin' => ['*'],
-                    'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-                    'Access-Control-Allow-Credentials' => true,
-                    'Access-Control-Max-Age' => 3600,
-                ],
+        $behaviors = parent::behaviors();
+        $behaviors['corsFilter'] = [
+            'class' => \yii\filters\Cors::className(),
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+                'Access-Control-Allow-Credentials' => true,
+                'Access-Control-Max-Age' => 3600,
             ],
-        ]);
+        ];
+
+        return $behaviors;
     }
 
     /**
@@ -56,8 +60,10 @@ class PostController extends Controller {
             $this->patch();
         } elseif (Yii::$app->request->method == 'DELETE') {
             $this->delete();
-        } else {
+        } elseif (Yii::$app->request->method == 'GET') {
             $this->get();
+        } else {
+            ApiException::set(400);
         }
 
         return $this->result;
@@ -73,6 +79,9 @@ class PostController extends Controller {
                     ->limit($this->page_limit)
                     ->all();
         }
+        if (!count($this->result)) {
+            ApiException::set(404);
+        }
     }
 
     private function post() {
@@ -82,14 +91,12 @@ class PostController extends Controller {
             $post->title = Yii::$app->request->post()['title'];
             $post->content = Yii::$app->request->post()['content'];
             if ($post->save()) {
-                $this->result = 'Success';
+                ApiException::set(200);
             } else {
-                Yii::$app->response->statusCode = 400;
-                $this->result = 'Bad Request';
+                ApiException::set(400);
             }
         } else {
-            Yii::$app->response->statusCode = 400;
-            $this->result = 'Bad Request';
+            ApiException::set(400);
         }
     }
 
@@ -104,18 +111,15 @@ class PostController extends Controller {
                 $post->content = $data['content'];
 
                 if ($post->save()) {
-                    $this->result = 'Success';
+                    ApiException::set(200);
                 } else {
-                    Yii::$app->response->statusCode = 400;
-                    $this->result = 'Bad Request';
+                    ApiException::set(400);
                 }
             } else {
-                Yii::$app->response->statusCode = 404;
-                $this->result = 'Not found';
+                ApiException::set(404);
             }
         } else {
-            Yii::$app->response->statusCode = 400;
-            $this->result = 'Bad Request';
+            ApiException::set(400);
         }
     }
 
@@ -134,18 +138,15 @@ class PostController extends Controller {
                 }
 
                 if ($post->save()) {
-                    $this->result = 'Success';
+                    ApiException::set(200);
                 } else {
-                    Yii::$app->response->statusCode = 400;
-                    $this->result = 'Bad Request';
+                    ApiException::set(400);
                 }
             } else {
-                Yii::$app->response->statusCode = 404;
-                $this->result = 'Not found';
+                ApiException::set(404);
             }
         } else {
-            Yii::$app->response->statusCode = 400;
-            $this->result = 'Bad Request';
+            ApiException::set(400);
         }
     }
 
@@ -154,18 +155,15 @@ class PostController extends Controller {
             $post = Post::findOne($this->id);
             if ($post instanceof Post) {
                 if ($post->delete()) {
-                    $this->result = 'Success';
+                    ApiException::set(200);
                 } else {
-                    Yii::$app->response->statusCode = 400;
-                    $this->result = 'Bad Request';
+                    ApiException::set(400);
                 }
             } else {
-                Yii::$app->response->statusCode = 404;
-                $this->result = 'Not found';
+                ApiException::set(404);
             }
         } else {
-            Yii::$app->response->statusCode = 400;
-            $this->result = 'Bad Request';
+            ApiException::set(400);
         }
     }
 

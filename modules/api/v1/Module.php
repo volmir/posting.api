@@ -19,13 +19,17 @@ class Module extends \yii\base\Module {
      */
     public function init() {
         parent::init();
+        
+        Yii::configure($this, require __DIR__ . '/config/main.php');
+        
+        Yii::$app->user->enableSession = false;
 
         $this->setOutputFormat();
         $this->checkJsonData();
     }
 
     private function setOutputFormat() {
-        if (Yii::$app->request->headers->get('Content-Type') == 'application/xml') {
+        if (Yii::$app->request->headers->get('Accept') == 'application/xml') {
             Yii::$app->response->format = \yii\web\Response::FORMAT_XML;
         } else {
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

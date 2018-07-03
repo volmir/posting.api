@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 02 2018 г., 16:39
+-- Время создания: Июл 03 2018 г., 17:42
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -63,8 +63,7 @@ CREATE TABLE `migration` (
 --
 
 INSERT INTO `migration` (`version`, `apply_time`) VALUES
-('m000000_000000_base', 1530085447),
-('m130524_201442_init', 1530522524);
+('m000000_000000_base', 1530085447);
 
 -- --------------------------------------------------------
 
@@ -93,8 +92,7 @@ INSERT INTO `post` (`id`, `user_id`, `title`, `content`, `date_create`, `status`
 (7, 1, 'Another post name', 'Another value of field type must be part of list: blue, red, green', '2018-06-27 16:55:12', 1),
 (8, 1, 'Post title', 'Content text', '2018-06-27 16:56:11', 1),
 (10, 1, 'Some post name', 'Another value of field type must be part of list: blue, red, green', '2018-07-02 15:23:58', 1),
-(12, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-02 16:37:11', 1),
-(13, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-02 16:38:19', 1);
+(12, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-02 16:37:11', 1);
 
 -- --------------------------------------------------------
 
@@ -123,13 +121,15 @@ INSERT INTO `post_vs_category` (`id`, `post_id`, `category_id`) VALUES
 
 CREATE TABLE `user` (
   `id` int(10) UNSIGNED NOT NULL,
-  `login` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
+  `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `auth_key` varchar(50) NOT NULL,
+  `access_token` varchar(50) NOT NULL,
   `firstname` varchar(100) NOT NULL,
   `lastname` varchar(100) NOT NULL,
   `is_active` tinyint(4) NOT NULL DEFAULT '1',
-  `is_deleted` tinyint(4) NOT NULL DEFAULT '1',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
   `date_created` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -137,33 +137,9 @@ CREATE TABLE `user` (
 -- Дамп данных таблицы `user`
 --
 
-INSERT INTO `user` (`id`, `login`, `email`, `password`, `firstname`, `lastname`, `is_active`, `is_deleted`, `date_created`) VALUES
-(1, 'tester', 'test@gmail.com', '111111', 'Alexandr', 'Petrenko', 1, 1, '2018-06-27 12:36:15');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `user_adv`
---
-
-CREATE TABLE `user_adv` (
-  `id` int(11) NOT NULL,
-  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `auth_key` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `status` smallint(6) NOT NULL DEFAULT '10',
-  `created_at` int(11) NOT NULL,
-  `updated_at` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Дамп данных таблицы `user_adv`
---
-
-INSERT INTO `user_adv` (`id`, `username`, `auth_key`, `password_hash`, `password_reset_token`, `email`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'tester', '6VJFLgvpX9gyB3u9AJ1wRdULSm8bfiIg', '$2y$13$l1y2/tf33gtUCPnggeDZduQJLS1Q40Qvh/9M5FBh6sJY9YMpSMDBm', NULL, 'test@gmail.com', 10, 1530525398, 1530525398);
+INSERT INTO `user` (`id`, `username`, `password`, `email`, `auth_key`, `access_token`, `firstname`, `lastname`, `is_active`, `is_deleted`, `date_created`) VALUES
+(1, 'admin', 'admin', 'admin@mail.com', 'auth-admin', '2KfdjUr34K5k73HJIKkrdf92dkLk', 'Alexandr', 'Petrov', 1, 0, '2018-06-27 12:36:15'),
+(2, 'tester', 'tester', 'tester@mail.com', 'auth-tester', 'sjWk72kls39kdjk733KL3Llk2LJio', 'Nikolay', 'Ivanov', 1, 0, '2018-07-03 14:14:29');
 
 --
 -- Индексы сохранённых таблиц
@@ -203,17 +179,10 @@ ALTER TABLE `post_vs_category`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `login` (`login`),
-  ADD KEY `email` (`email`);
-
---
--- Индексы таблицы `user_adv`
---
-ALTER TABLE `user_adv`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `password_reset_token` (`password_reset_token`);
+  ADD KEY `email` (`email`),
+  ADD KEY `access_token` (`access_token`),
+  ADD KEY `auth_key` (`auth_key`),
+  ADD KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -228,7 +197,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT для таблицы `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT для таблицы `post_vs_category`
 --
@@ -238,12 +207,7 @@ ALTER TABLE `post_vs_category`
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT для таблицы `user_adv`
---
-ALTER TABLE `user_adv`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --

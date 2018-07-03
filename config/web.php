@@ -52,9 +52,9 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                //'v1' => 'api_v1/default',
                 'v1/posts' => 'v1/post',
                 'v1/posts/<id>' => 'v1/post',
+                'v1/auth' => 'v1/auth',
             ],
         ],
     ],

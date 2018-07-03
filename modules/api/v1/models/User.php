@@ -17,21 +17,24 @@ use Yii;
  * @property int $is_deleted
  * @property string $date_created
  */
-class User extends \yii\db\ActiveRecord
-{
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
+
+    public function init() {
+        parent::init();
+        \Yii::$app->user->enableSession = false;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'user';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['login', 'email', 'password', 'firstname', 'lastname', 'date_created'], 'required'],
             [['is_active', 'is_deleted'], 'integer'],
@@ -43,8 +46,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'login' => 'Login',
@@ -57,4 +59,16 @@ class User extends \yii\db\ActiveRecord
             'date_created' => 'Date Created',
         ];
     }
+
+    public static function findIdentity($id) {}
+
+    public static function findIdentityByAccessToken($token, $type = null) {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    public function getId() {}
+
+    public function getAuthKey() {}
+
+    public function validateAuthKey($authKey) {}
 }

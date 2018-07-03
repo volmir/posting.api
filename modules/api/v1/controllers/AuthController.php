@@ -2,9 +2,17 @@
 
 namespace app\modules\api\v1\controllers;
 
+use Yii;
 use yii\web\Controller;
+use app\modules\api\v1\models\ApiException;
 
-class DefaultController extends Controller {
+class AuthController extends Controller {
+
+    /**
+     *
+     * @var mixed
+     */
+    private $result;
 
     public function init() {
         $this->enableCsrfValidation = false;
@@ -33,11 +41,19 @@ class DefaultController extends Controller {
      * @return stdClass
      */
     public function actionIndex() {
-        $result = new \stdClass();
-        $result->status = 'Success';
-        $result->version = '1.0';
-        
-        return $result;
+        if (Yii::$app->request->method == 'POST') {
+            $this->post();
+        } else {
+            ApiException::set(400);
+        }
+
+        return $this->result;
     }
 
+    private function post() {
+        $this->result = [
+            'access_token' => '2KfdjUr34K5k73HJIKkrdf92dkLk',
+        ];
+    }
+    
 }
