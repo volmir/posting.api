@@ -9,7 +9,7 @@ curl -i -X GET http://posting.local/v1 --header 'Accept: application/json'
 curl -i -X GET http://posting.local/v1 --header 'Accept: application/xml'
 ```
 
-**authentification**
+**Authentification**
 
 ```
 curl -i -X POST http://posting.local/v1/auth -d '{"username":"admin","password":"admin"}'

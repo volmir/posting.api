@@ -18,6 +18,9 @@ use Yii;
  * @property string $date_created
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
+    
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
 
     public function init() {
         parent::init();

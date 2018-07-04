@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 03 2018 г., 17:42
+-- Время создания: Июл 04 2018 г., 12:03
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -92,7 +92,10 @@ INSERT INTO `post` (`id`, `user_id`, `title`, `content`, `date_create`, `status`
 (7, 1, 'Another post name', 'Another value of field type must be part of list: blue, red, green', '2018-06-27 16:55:12', 1),
 (8, 1, 'Post title', 'Content text', '2018-06-27 16:56:11', 1),
 (10, 1, 'Some post name', 'Another value of field type must be part of list: blue, red, green', '2018-07-02 15:23:58', 1),
-(12, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-02 16:37:11', 1);
+(12, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-02 16:37:11', 1),
+(18, 2, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 10:29:25', 1),
+(26, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 11:31:46', 1),
+(27, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 11:53:01', 1);
 
 -- --------------------------------------------------------
 
@@ -179,10 +182,8 @@ ALTER TABLE `post_vs_category`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `email` (`email`),
-  ADD KEY `access_token` (`access_token`),
-  ADD KEY `auth_key` (`auth_key`),
-  ADD KEY `username` (`username`);
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -197,7 +198,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT для таблицы `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT для таблицы `post_vs_category`
 --

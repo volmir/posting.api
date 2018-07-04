@@ -46,8 +46,10 @@ class Module extends \yii\base\Module {
                 $input .= $s;
             }
             fclose($file_handle);
+            
             if (!empty($input)) {
-                $_POST = array_merge($_POST, (array)json_decode($input));
+                $data = (array)json_decode($input);
+                $_POST = array_merge($_POST, $data);
             }
         }
     }

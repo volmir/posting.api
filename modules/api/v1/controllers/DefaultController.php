@@ -21,7 +21,7 @@ class DefaultController extends Controller {
                 'Origin' => ['*'],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
                 'Access-Control-Allow-Credentials' => true,
-                'Access-Control-Max-Age' => 3600,
+                'Access-Control-Max-Age' => 7200,
             ],
         ];
 
@@ -29,7 +29,7 @@ class DefaultController extends Controller {
     }
 
     /**
-     * Renders the index view for the module
+     * Renders the view for the module
      * @return stdClass
      */
     public function actionIndex() {

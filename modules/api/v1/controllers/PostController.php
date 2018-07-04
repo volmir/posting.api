@@ -6,7 +6,7 @@ use Yii;
 use yii\web\Controller;
 use app\modules\api\v1\models\Post;
 use app\modules\api\v1\models\Authentification;
-use app\modules\api\v1\models\ApiException;
+use app\modules\api\v1\exceptions\ApiException;
 
 class PostController extends Controller {
 
@@ -22,9 +22,15 @@ class PostController extends Controller {
      */
     private $result;
 
+    /**
+     *
+     * @var app\modules\api\v1\models\User
+     */
+    protected $user;
+
     public function init() {
         $this->enableCsrfValidation = false;
-        Authentification::verify();        
+        $this->user = Authentification::verify();
     }
 
     /**
@@ -38,7 +44,7 @@ class PostController extends Controller {
                 'Origin' => ['*'],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
                 'Access-Control-Allow-Credentials' => true,
-                'Access-Control-Max-Age' => 3600,
+                'Access-Control-Max-Age' => 7200,
             ],
         ];
 
@@ -46,7 +52,7 @@ class PostController extends Controller {
     }
 
     /**
-     * Renders the index view for the module
+     * Renders the view for the module
      * @return stdClass
      */
     public function actionIndex($id = 0) {
@@ -72,10 +78,16 @@ class PostController extends Controller {
     private function get() {
         if ($this->id > 0) {
             $this->result = Post::find()
-                    ->where(['id' => $this->id])
+                    ->where([
+                        'id' => $this->id,
+                        'user_id' => $this->user->id,
+                    ])
                     ->one();
         } else {
             $this->result = Post::find()
+                    ->where([
+                        'user_id' => $this->user->id,
+                    ])
                     ->limit($this->page_limit)
                     ->all();
         }
@@ -85,13 +97,15 @@ class PostController extends Controller {
     }
 
     private function post() {
-        if (!empty(Yii::$app->request->post()['title']) && !empty(Yii::$app->request->post()['content'])) {
+        $data = Yii::$app->request->post();
+        if (!empty($data['title']) && !empty($data['content'])) {
             $post = new Post();
-            $post->user_id = 1;
-            $post->title = Yii::$app->request->post()['title'];
-            $post->content = Yii::$app->request->post()['content'];
+            $post->user_id = $this->user->id;
+            $post->title = $data['title'];
+            $post->content = $data['content'];
             if ($post->save()) {
-                ApiException::set(200);
+                Yii::$app->response->headers->set('Location', '/v1/posts/' . $post->getPrimaryKey());
+                ApiException::set(201);
             } else {
                 ApiException::set(400);
             }
@@ -104,7 +118,10 @@ class PostController extends Controller {
         $data = Yii::$app->request->post();
         if ($this->id > 0 && !empty($data['title']) && !empty($data['content'])) {
             $post = Post::find()
-                    ->where(['id' => $this->id])
+                    ->where([
+                        'id' => $this->id,
+                        'user_id' => $this->user->id,
+                    ])
                     ->one();
             if ($post instanceof Post) {
                 $post->title = $data['title'];
@@ -127,7 +144,10 @@ class PostController extends Controller {
         $data = Yii::$app->request->post();
         if ($this->id > 0 && (!empty($data['title']) || !empty($data['content']))) {
             $post = Post::find()
-                    ->where(['id' => $this->id])
+                    ->where([
+                        'id' => $this->id,
+                        'user_id' => $this->user->id,
+                    ])
                     ->one();
             if ($post instanceof Post) {
                 if (!empty($data['title'])) {
@@ -152,10 +172,15 @@ class PostController extends Controller {
 
     private function delete() {
         if ($this->id > 0) {
-            $post = Post::findOne($this->id);
+            $post = Post::find()
+                    ->where([
+                        'id' => $this->id,
+                        'user_id' => $this->user->id,
+                    ])
+                    ->one();
             if ($post instanceof Post) {
                 if ($post->delete()) {
-                    ApiException::set(200);
+                    ApiException::set(204);
                 } else {
                     ApiException::set(400);
                 }
