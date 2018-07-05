@@ -5,17 +5,21 @@ namespace app\modules\api\v1\models;
 use Yii;
 
 /**
- * This is the model class for table "users".
+ * This is the model class for table "user".
  *
  * @property int $id
- * @property string $login
- * @property string $email
+ * @property string $username
  * @property string $password
+ * @property string $email
+ * @property string $auth_key
+ * @property string $access_token
  * @property string $firstname
  * @property string $lastname
  * @property int $is_active
  * @property int $is_deleted
  * @property string $date_created
+ *
+ * @property Post[] $posts
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     
@@ -30,7 +34,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     /**
      * {@inheritdoc}
      */
-    public static function tableName() {
+    public static function tableName()
+    {
         return 'user';
     }
 
@@ -39,10 +44,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
      */
     public function rules() {
         return [
-            [['login', 'email', 'password', 'firstname', 'lastname', 'date_created'], 'required'],
-            [['is_active', 'is_deleted'], 'integer'],
+            [['status'], 'integer'],
             [['date_created'], 'safe'],
-            [['login', 'email', 'password', 'firstname', 'lastname'], 'string', 'max' => 100],
+            [['username', 'password'], 'string', 'max' => 255],
+            [['email', 'firstname', 'lastname'], 'string', 'max' => 100],
+            [['auth_key', 'access_token'], 'string', 'max' => 60],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
         ];
     }
 
@@ -52,26 +60,85 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     public function attributeLabels() {
         return [
             'id' => 'ID',
-            'login' => 'Login',
-            'email' => 'Email',
+            'username' => 'Username',
             'password' => 'Password',
+            'email' => 'Email',
+            'auth_key' => 'Auth Key',
+            'access_token' => 'Access Token',
             'firstname' => 'Firstname',
             'lastname' => 'Lastname',
-            'is_active' => 'Is Active',
-            'is_deleted' => 'Is Deleted',
+            'status' => 'Status',
             'date_created' => 'Date Created',
         ];
     }
 
-    public static function findIdentity($id) {}
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPosts()
+    {
+        return $this->hasMany(Post::className(), ['user_id' => 'id']);
+    } 
 
-    public static function findIdentityByAccessToken($token, $type = null) {
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
         return static::findOne(['access_token' => $token]);
     }
 
-    public function getId() {}
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findByUsername($username)
+    {
+        return static::findOne(['username' => $username]);
+    }
 
-    public function getAuthKey() {}
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-    public function validateAuthKey($authKey) {}
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->auth_key === $authKey;
+    }    
+    
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return \Yii::$app->security->validatePassword($password, $this->password);
+    }    
 }

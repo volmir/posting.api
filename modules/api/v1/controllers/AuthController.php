@@ -54,17 +54,17 @@ class AuthController extends Controller {
     private function post() {
         $data = Yii::$app->request->post();
         if (!empty($data['username']) && !empty($data['password'])) {
-            $this->result = User::find()
-                    ->select(['access_token'])
+            $user = User::find()
+                    ->select(['access_token','password'])
                     ->where([
                         'username' => $data['username'],
-                        'password' => $data['password'],
-                        'is_active' => User::STATUS_ACTIVE,
+                        'status' => User::STATUS_ACTIVE,
                     ])
                     ->limit(1)
-                    ->all();
-            
-            if (!count($this->result)) {
+                    ->all();            
+            if (count($user) && \Yii::$app->security->validatePassword($data['password'], $user[0]->password)) {
+                $this->result = ['access_token' => $user[0]->access_token];
+            } else {
                 ApiException::set(404);
             }
         } else {
