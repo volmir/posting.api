@@ -64,7 +64,7 @@ class SiteController extends Controller {
     public function actionIndex() {
         return $this->render('index');
     }
-
+    
     /**
      * Login action.
      *
@@ -122,10 +122,24 @@ class SiteController extends Controller {
         $model = new SignupForm();
 
         if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
+            /*
+              if ($user = $model->signup()) {
+
+              if (Yii::$app->getUser()->login($user)) {
+              return $this->goHome();
+              }
+              }
+             */
+
+            try {
+                if ($user = $model->signup()) {
+                    Yii::$app->session->setFlash('success', 'Check your email to confirm the registration.');
+                    $model->sentEmailConfirm($user);
                 }
+                return $this->goHome();
+            } catch (\RuntimeException $e) {
+                Yii::$app->errorHandler->logException($e);
+                Yii::$app->session->setFlash('error', $e->getMessage());
             }
         }
 
@@ -185,8 +199,22 @@ class SiteController extends Controller {
         }
 
         return $this->render('resetPassword', [
-            'model' => $model,
+                    'model' => $model,
         ]);
+    }
+
+    public function actionSignupConfirm($token) {
+        $signup = new SignupForm();
+
+        try {
+            $signup->confirmation($token);
+            Yii::$app->session->setFlash('success', 'You have successfully confirmed your registration.');
+        } catch (\Exception $e) {
+            Yii::$app->errorHandler->logException($e);
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+
+        return $this->goHome();
     }
 
 }

@@ -22,8 +22,12 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
 
+    const STATUS_INACTIVE = 0; 
     const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 0;    
+    const STATUS_BLOCKED = 2;    
+    
+    const ROLE_USER = 1;    
+    const ROLE_ADMIN = 2;    
     
     /**
      * {@inheritdoc}
@@ -117,6 +121,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     public function generateAccessToken() {
         $this->access_token = \Yii::$app->security->generateRandomString();
     }
+    
+    public function generateEmailConfirmToken() {
+        $this->email_confirm_token = \Yii::$app->security->generateRandomString();
+    }    
 
     /**
      * {@inheritdoc}

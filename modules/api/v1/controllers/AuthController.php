@@ -4,7 +4,7 @@ namespace app\modules\api\v1\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\modules\api\v1\models\User;
+use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 
 class AuthController extends Controller {
@@ -54,11 +54,11 @@ class AuthController extends Controller {
     private function post() {
         $data = Yii::$app->request->post();
         if (!empty($data['username']) && !empty($data['password'])) {
-            $user = User::find()
+            $user = UserApi::find()
                     ->select(['access_token','password'])
                     ->where([
                         'username' => $data['username'],
-                        'status' => User::STATUS_ACTIVE,
+                        'status' => UserApi::STATUS_ACTIVE,
                     ])
                     ->limit(1)
                     ->all();            

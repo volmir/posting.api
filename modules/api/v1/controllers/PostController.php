@@ -24,7 +24,7 @@ class PostController extends Controller {
 
     /**
      *
-     * @var app\modules\api\v1\models\User
+     * @var app\modules\api\v1\models\UserApi
      */
     protected $user;
 

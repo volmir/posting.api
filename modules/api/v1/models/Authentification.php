@@ -10,7 +10,7 @@ class Authentification {
     
     /**
      * 
-     * @return app\modules\api\v1\models\User
+     * @return app\modules\api\v1\models\UserApi
      */
     public static function verify() {
         $auth = new HttpBearerAuth();

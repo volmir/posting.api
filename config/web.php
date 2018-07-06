@@ -15,6 +15,12 @@ $config = [
         'v1' => [
             'class' => 'app\modules\api\v1\Module',
         ],
+        'backend' => [
+            'class' => 'app\modules\backend\Module',
+            'controllerNamespace' => 'app\controllers\backend',
+            'viewPath' => '@app/views/backend',
+            'layout' => '@app/views/layouts/backend',
+        ],
     ],
     'components' => [
         'request' => [
@@ -52,9 +58,16 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'v1/posts' => 'v1/post',
-                'v1/posts/<id>' => 'v1/post',
-                'v1/auth' => 'v1/auth',
+                '' => 'site/index',
+                'v1/post/<id:\d+>' => 'v1/post',
+                [
+                    'class' => 'yii\web\GroupUrlRule',
+                    'prefix' => 'backend',
+                    'routePrefix' => 'backend',
+                    'rules' => [
+                        '' => 'default/index',
+                    ],
+                ],
             ],
         ],
     ],
