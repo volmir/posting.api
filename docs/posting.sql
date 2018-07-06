@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 05 2018 г., 17:08
+-- Время создания: Июл 06 2018 г., 17:17
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -91,7 +91,7 @@ INSERT INTO `post` (`id`, `user_id`, `title`, `content`, `date_create`, `status`
 (6, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-06-27 16:53:22', 1),
 (7, 1, 'Another post name', 'Another value of field type must be part of list: blue, red, green', '2018-06-27 16:55:12', 1),
 (8, 1, 'Post title', 'Content text', '2018-06-27 16:56:11', 1),
-(10, 1, 'Another post name', 'Another value of field type must be part of list: blue, red, green', '2018-07-02 15:23:58', 1),
+(10, 1, 'Some post name', 'Another value of field type must be part of list: blue, red, green', '2018-07-02 15:23:58', 1),
 (12, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-02 16:37:11', 1),
 (18, 2, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 10:29:25', 1),
 (27, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 11:53:01', 1),
@@ -130,21 +130,25 @@ CREATE TABLE `user` (
   `auth_key` varchar(60) NOT NULL DEFAULT '',
   `access_token` varchar(60) NOT NULL DEFAULT '',
   `password_reset_token` varchar(60) NOT NULL DEFAULT '',
+  `email_confirm_token` varchar(60) NOT NULL DEFAULT '',
   `firstname` varchar(100) NOT NULL DEFAULT '',
   `lastname` varchar(100) NOT NULL DEFAULT '',
-  `status` tinyint(4) NOT NULL DEFAULT '1',
-  `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `email`, `auth_key`, `access_token`, `password_reset_token`, `firstname`, `lastname`, `status`, `date_created`) VALUES
-(1, 'admin', '$2y$13$NUQnYWDs.e/AmtLmH5mYqukSIm49KU3/bNG35MkWysMTbVixFZGuO', 'admin@mail.com', 'Q7cqvkF62XPvMVaR7hz-2SvVLvjpFvik', '2KfdjUr34K5k73HJIKkrdf92dkLk', '', 'Alexandr', 'Petrov', 1, '2018-06-27 12:36:15'),
-(2, 'tester', '$2y$13$CIgZx8YApWllOm7S73G3E.Xmw4RjQfCNx0x9uxBu9Zd/rDX4Fy5ES', 'tester@mail.com', 'qNfV-scJqYjpQlvCfXtztUZcS0xCf_ex', 'sjWk72kls39kdjk733KL3Llk2LJio', '', 'Nikolay', 'Ivanov', 1, '2018-07-03 14:14:29'),
-(14, 'user', '$2y$13$8svCnhjsyhXdjf1qchdMUuKYZfjQyBju8OJCI7flS6JGt7UbiCUYa', 'user@gmail.com', 'OcCmB99oZIHWdakCClitar2fLN4JyarN', 'dH4Oica5nzKvFN-9kzr0jvu_FLNnC-27', '', 'Sergey', 'Ivanov', 1, '2018-07-05 15:45:10'),
-(16, 'volmir', '$2y$13$i29vkcMpe/HXboPS5HdbZep5bdhtgo7uSz/6g3quJoCZNu2HQcCi.', 'volmir@ukr.net', 'LJ6M08PIkaIJJC3HwOJaCBz1DeJSPZDU', '-ruS-QVb0c8pTuoUETAoi1BCmngOM5me', '', 'Vladimir', 'Prokhnenko', 1, '2018-07-05 16:45:05');
+INSERT INTO `user` (`id`, `username`, `password`, `email`, `auth_key`, `access_token`, `password_reset_token`, `email_confirm_token`, `firstname`, `lastname`, `status`, `created_at`) VALUES
+(1, 'admin', '$2y$13$NUQnYWDs.e/AmtLmH5mYqukSIm49KU3/bNG35MkWysMTbVixFZGuO', 'admin@mail.com', 'Q7cqvkF62XPvMVaR7hz-2SvVLvjpFvik', '2KfdjUr34K5k73HJIKkrdf92dkLk', '5Tfb10xbacBLZzpxZLo82d5gD7F4S9f5_1530881096', '', 'Alexandr', 'Petrov', 1, '2018-06-27 12:36:15'),
+(2, 'tester', '$2y$13$CIgZx8YApWllOm7S73G3E.Xmw4RjQfCNx0x9uxBu9Zd/rDX4Fy5ES', 'tester@mail.com', 'qNfV-scJqYjpQlvCfXtztUZcS0xCf_ex', 'sjWk72kls39kdjk733KL3Llk2LJio', '', '', 'Nikolay', 'Ivanov', 1, '2018-07-03 14:14:29'),
+(14, 'user', '$2y$13$8svCnhjsyhXdjf1qchdMUuKYZfjQyBju8OJCI7flS6JGt7UbiCUYa', 'user@gmail.com', 'OcCmB99oZIHWdakCClitar2fLN4JyarN', 'dH4Oica5nzKvFN-9kzr0jvu_FLNnC-27', '', '', 'Sergey', 'Ivanov', 1, '2018-07-05 15:45:10'),
+(16, 'volmir', '$2y$13$i29vkcMpe/HXboPS5HdbZep5bdhtgo7uSz/6g3quJoCZNu2HQcCi.', 'volmir@ukr.net', 'LJ6M08PIkaIJJC3HwOJaCBz1DeJSPZDU', '-ruS-QVb0c8pTuoUETAoi1BCmngOM5me', '', '', 'Vladimir', 'Prokhnenko', 1, '2018-07-05 16:45:05'),
+(18, 'admin3', '$2y$13$qG9DNS4LK2GjtWNWAp2xauqqqV9mnEYuqYgv5AsD3T42ZythTF/Eu', 'tester3@mail.com', 'E08yfBXa5SeNIrgH3EcSpC9wMjXFnJyf', 'DMZaVYEjmCW_fVzRC6G68uVhnlhF_W_g', '', '', '', '', 1, '2018-07-06 10:21:03'),
+(19, 'admin4', '$2y$13$NUxI.caBZqL9KT5Mj2b09e/d63IkjNJ1oOMZ9FUOy7EVAJbOZoHMi', 'user4@gmail.com', 'ooOZm4SLw46tZ6L66KH63G5v7lrqV2Ew', '0HP_NRFN44tADAUAeUh06N07l2uQ0P_y', '', '', '', '', 1, '2018-07-06 10:30:59'),
+(20, 'admin5', '$2y$13$plFCLurDsZUK8YezVWmrvOgbG1Td7ijkKsHa008s/.DsQaWM8.zJe', 'test5@gmail.com', '285FnP6vuTlczyjFOQ9-hWXOJt62W7lg', '3BaMSbRewA83LxBjORs9IwrG5JXHNTlC', '', 'hdzYKjPDMReGQWxLLqzW10z2MY-ZKnPy', '', '', 0, '2018-07-06 11:29:06');
 
 --
 -- Индексы сохранённых таблиц
@@ -186,7 +190,9 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `password_reset_token` (`password_reset_token`);
+  ADD KEY `password_reset_token` (`password_reset_token`),
+  ADD KEY `email_confirm_token` (`email_confirm_token`),
+  ADD KEY `status` (`status`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -201,7 +207,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT для таблицы `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT для таблицы `post_vs_category`
 --
@@ -211,7 +217,7 @@ ALTER TABLE `post_vs_category`
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
