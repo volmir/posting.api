@@ -9,6 +9,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\modules\backend\rbac\Rbac as BackendRbac;
 
 AppAsset::register($this);
 ?>
@@ -29,7 +30,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => '&#9745; ' . Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -37,14 +38,18 @@ AppAsset::register($this);
     ]);
 $menuItems = [
     ['label' => 'Home', 'url' => ['/site/index']],
-    ['label' => 'About', 'url' => ['/site/about']],
-    ['label' => 'Contact', 'url' => ['/site/contact']],
+    ['label' => 'About', 'url' => ['/about']],
+    ['label' => 'Contact', 'url' => ['/contact']],
 ];
  
 if (Yii::$app->user->isGuest) {
     $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
     $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
 } else {
+    if (Yii::$app->user->can(BackendRbac::PERMISSION_BACKEND_PANEL)) {
+        $menuItems[] = ['label' => 'Backend', 'url' => ['/backend/default/index']];
+    }
+    $menuItems[] = ['label' => 'Profile', 'url' => ['/user/profile/index']];
     $menuItems[] = '<li>'
         . Html::beginForm(['/site/logout'], 'post')
         . Html::submitButton(

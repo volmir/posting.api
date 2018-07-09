@@ -5,6 +5,8 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'language'=>'ru-RU',
+    'name' => 'API App',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -21,10 +23,14 @@ $config = [
             'viewPath' => '@app/views/backend',
             'layout' => '@app/views/layouts/backend',
         ],
+        'user' => [
+            'class' => 'app\modules\user\Module',
+            'controllerNamespace' => 'app\controllers\user',
+            'viewPath' => '@app/views/user',
+        ],  
     ],
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'fbY5Ay9Hdfkrl9GHx089hEQ',
         ],
         'cache' => [
@@ -37,6 +43,9 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+        ],        
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set
@@ -59,7 +68,6 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 '' => 'site/index',
-                'v1/post/<id:\d+>' => 'v1/post',
                 [
                     'class' => 'yii\web\GroupUrlRule',
                     'prefix' => 'backend',
@@ -68,6 +76,24 @@ $config = [
                         '' => 'default/index',
                     ],
                 ],
+                [
+                    'class' => 'yii\web\GroupUrlRule',
+                    'prefix' => 'api/v1',
+                    'routePrefix' => 'v1',
+                    'rules' => [
+                        '' => 'default/index',
+                        '<controller:\w+>' => '<controller>/index',
+                        'post/<id:\d+>' => 'post',
+                    ],
+                ],                
+                [
+                    'class' => 'yii\web\GroupUrlRule',
+                    'prefix' => 'user',
+                    'routePrefix' => 'user',
+                    'rules' => [
+                        '' => 'default/index',
+                    ],
+                ],                
             ],
         ],
     ],
