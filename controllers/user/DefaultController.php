@@ -17,5 +17,12 @@ class DefaultController extends Controller
     {
         return $this->redirect('user/profile');
     }
-    
+    public function actionLogin()
+    {
+        echo 'asdfZSDfs';
+    }    
+    public function actionLogout()
+    {
+        echo 'asdzfvzxdfvsdfg 32';
+    }     
 }

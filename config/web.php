@@ -92,6 +92,7 @@ $config = [
                     'routePrefix' => 'user',
                     'rules' => [
                         '' => 'default/index',
+                        '<_a:(login|logout|signup|confirm-email|request-password-reset|reset-password)>' => 'default/<_a>',
                     ],
                 ],                
             ],

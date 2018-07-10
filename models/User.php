@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "user".
@@ -22,7 +23,7 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
 
-    const STATUS_INACTIVE = 0; 
+    const STATUS_WAIT = 0; 
     const STATUS_ACTIVE = 1;
     const STATUS_BLOCKED = 2;    
     
@@ -182,5 +183,19 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     {
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }    
+    
+    public function getStatusName()
+    {
+        return ArrayHelper::getValue(self::getStatusesArray(), $this->status);
+    }
+    
+    public static function getStatusesArray()
+    {
+        return [
+            self::STATUS_WAIT => 'WAIT',
+            self::STATUS_ACTIVE => 'ACTIVE',
+            self::STATUS_BLOCKED => 'BLOCKED',
+        ];
+    }
 
 }
