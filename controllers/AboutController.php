@@ -7,6 +7,10 @@ use yii\web\Controller;
 
 class AboutController extends Controller {
 
+    public function getViewPath() {
+        return Yii::getAlias('@app/views/frontend/about');
+    }
+
     /**
      * Displays index page.
      *

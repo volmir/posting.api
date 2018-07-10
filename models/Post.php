@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "posts".
@@ -57,4 +58,19 @@ class Post extends \yii\db\ActiveRecord
             'status' => 'Status',
         ];
     }
+    
+    public function getStatusName()
+    {
+        return ArrayHelper::getValue(self::getStatusesArray(), $this->status);
+    }
+    
+    public static function getStatusesArray()
+    {
+        return [
+            self::STATUS_WAIT => 'WAIT',
+            self::STATUS_ACTIVE => 'ACTIVE',
+            self::STATUS_BLOCKED => 'BLOCKED',
+        ];
+    }
+    
 }

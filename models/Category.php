@@ -44,4 +44,29 @@ class Category extends \yii\db\ActiveRecord
             'name' => 'Name',
         ];
     }
+    
+    public function myname($id)
+    {
+        $model = self::find()
+                        ->where(['id' => $id])
+                        ->one()->name;
+        return $model;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTree()
+    {
+        return $this->hasOne(self::className(), ['id' => 'tree_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTrees()
+    {
+        return $this->hasMany(self::className(), ['tree_id' => 'id']);
+    }    
+    
 }

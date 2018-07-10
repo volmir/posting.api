@@ -8,6 +8,10 @@ use app\models\frontend\ContactForm;
 
 class ContactController extends Controller {
 
+    public function getViewPath() {
+        return Yii::getAlias('@app/views/frontend/contact');
+    }    
+    
     /**
      * Displays index page.
      *
