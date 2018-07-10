@@ -27,9 +27,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     const STATUS_ACTIVE = 1;
     const STATUS_BLOCKED = 2;    
     
-    const ROLE_USER = 1;    
-    const ROLE_ADMIN = 2;    
-    
     /**
      * {@inheritdoc}
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\api\v1\models;
+namespace app\models;
 
 use Yii;
 
@@ -16,6 +16,11 @@ use Yii;
  */
 class Post extends \yii\db\ActiveRecord
 {
+    
+    const STATUS_WAIT = 0; 
+    const STATUS_ACTIVE = 1;
+    const STATUS_BLOCKED = 2;      
+    
     /**
      * {@inheritdoc}
      */

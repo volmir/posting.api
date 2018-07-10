@@ -39,6 +39,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'loginUrl' => ['/user/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -92,7 +93,7 @@ $config = [
                     'routePrefix' => 'user',
                     'rules' => [
                         '' => 'default/index',
-                        '<_a:(login|logout|signup|confirm-email|request-password-reset|reset-password)>' => 'default/<_a>',
+                        '<_a:(login|logout|signup|signup-confirm|request-password-reset|reset-password)>' => 'default/<_a>',
                     ],
                 ],                
             ],

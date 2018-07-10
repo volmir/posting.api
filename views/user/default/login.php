@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php ActiveForm::end(); ?>
 
 <div>
-    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
+    If you forgot your password you can <?= Html::a('reset it', ['request-password-reset']) ?>.
 </div>
 
 </div>

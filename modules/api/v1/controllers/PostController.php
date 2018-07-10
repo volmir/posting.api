@@ -4,7 +4,7 @@ namespace app\modules\api\v1\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\modules\api\v1\models\Post;
+use app\models\Post;
 use app\modules\api\v1\models\Authentification;
 use app\modules\api\v1\exceptions\ApiException;
 
