@@ -29,7 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'showOnEmpty' => FALSE,
         'parentColumnName' => 'parent_id',
         'columns' => [
-
             'name',
             ['class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} {delete} {add}',

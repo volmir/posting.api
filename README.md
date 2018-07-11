@@ -2,7 +2,7 @@
 REST API application
 
 
-*API*
+***API***
 
 **JSON and XML responce**
 
@@ -41,7 +41,7 @@ $.ajax({url: 'http://posting.local/api/v1/post/8', method: 'DELETE', dataType: '
 ```
 
 
-*Access right (RBAC)*
+***Access right (RBAC)***
 
 ```
 php yii rbac/init

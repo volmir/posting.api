@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Post;
 use app\components\grid\SetColumn;
+use app\models\backend\PostSearch;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\backend\PostSearch */
@@ -28,7 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'user_id',
+            [
+                'attribute' => 'user_id',
+                'value' => 'users.username',
+                'header' => 'User',
+                'filter' => PostSearch::getUserList(),
+            ],
             'title',
             'content:ntext',
             'date_create',

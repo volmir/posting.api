@@ -11,21 +11,19 @@ use Yii;
  * @property int $parent_id
  * @property string $name
  */
-class Category extends \yii\db\ActiveRecord
-{
+class Category extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'category';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['parent_id'], 'integer'],
             [['name'], 'required'],
@@ -36,37 +34,26 @@ class Category extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'parent_id' => 'Parent ID',
             'name' => 'Name',
         ];
     }
-    
-    public function myname($id)
-    {
-        $model = self::find()
-                        ->where(['id' => $id])
-                        ->one()->name;
-        return $model;
-    }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTree()
-    {
+    public function getTree() {
         return $this->hasOne(self::className(), ['id' => 'tree_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTrees()
-    {
+    public function getTrees() {
         return $this->hasMany(self::className(), ['tree_id' => 'id']);
-    }    
-    
+    }
+
 }

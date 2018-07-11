@@ -6,17 +6,18 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Post;
+use app\models\User;
+use yii\helpers\ArrayHelper;
 
 /**
  * PostSearch represents the model behind the search form of `app\models\Post`.
  */
-class PostSearch extends Post
-{
+class PostSearch extends Post {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'user_id', 'status'], 'integer'],
             [['title', 'content', 'date_create'], 'safe'],
@@ -26,8 +27,7 @@ class PostSearch extends Post
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,9 +39,9 @@ class PostSearch extends Post
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
-        $query = Post::find();
+    public function search($params) {
+        $query = Post::find()
+                ->with('users');
 
         // add conditions that should always apply here
 
@@ -49,7 +49,7 @@ class PostSearch extends Post
             'query' => $query,
             'sort' => [
                 'defaultOrder' => ['id' => SORT_DESC],
-            ],            
+            ],
         ]);
 
         $this->load($params);
@@ -69,8 +69,19 @@ class PostSearch extends Post
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'content', $this->content]);
+                ->andFilterWhere(['like', 'content', $this->content]);
 
         return $dataProvider;
     }
+
+    public static function getUserList() {
+        $users = User::find()
+                ->select(['user.id', 'username'])
+                ->join('JOIN', 'post p', 'user.id = p.user_id')
+                ->distinct(true)
+                ->all();
+
+        return ArrayHelper::map($users, 'id', 'username');
+    }
+
 }

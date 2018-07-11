@@ -8,6 +8,7 @@ use app\models\backend\PostSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\User;
 
 /**
  * PostController implements the CRUD actions for Post model.
