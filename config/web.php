@@ -83,8 +83,9 @@ $config = [
                     'routePrefix' => 'v1',
                     'rules' => [
                         '' => 'default/index',
-                        '<controller:\w+>' => '<controller>/index',
                         'post/<id:\d+>' => 'post',
+                        '<controller:\w+>' => '<controller>/index',
+                        '<controller>/<action>' => '<controller>/<action>',
                     ],
                 ],                
                 [

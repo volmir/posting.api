@@ -14,7 +14,13 @@ curl -i -X GET http://posting.local/api/v1 --header 'Accept: application/xml'
 **Authentification**
 
 ```
-curl -i -X POST http://posting.local/api/v1/auth -d '{"username":"admin","password":"admin"}'
+curl -i -X POST http://posting.local/api/v1/user/auth -d '{"username":"admin","password":"admin"}'
+```
+
+**User**
+
+```
+curl -i -X GET http://posting.local/api/v1/user
 ```
 
 **API URL's examples**

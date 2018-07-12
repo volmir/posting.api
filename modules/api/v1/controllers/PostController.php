@@ -104,7 +104,7 @@ class PostController extends Controller {
             $post->title = $data['title'];
             $post->content = $data['content'];
             if ($post->save()) {
-                Yii::$app->response->headers->set('Location', '/v1/posts/' . $post->getPrimaryKey());
+                Yii::$app->response->headers->set('Location', '/api/v1/posts/' . $post->getPrimaryKey());
                 ApiException::set(201);
             } else {
                 ApiException::set(400);
