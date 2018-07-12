@@ -2,16 +2,15 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use app\models\User;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\User */
+/* @var $model app\models\PostCategory */
 
-$this->title = $model->username;
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
+$this->title = $model->post->title;
+$this->params['breadcrumbs'][] = ['label' => 'Post Categories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-view">
+<div class="post-category-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -30,20 +29,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'username',
-            'password',
-            'email:email',
-            'auth_key',
-            'access_token',
-            'password_reset_token',
-            'email_confirm_token',
-            'firstname',
-            'lastname',
             [
-                'attribute' => 'status',
-                'value' => $model->getStatusName(),
+                'attribute' => 'post_id',
+                'value' => $model->post->title,
+                'header' => 'Post',
             ],
-            'created_at',
+            [
+                'attribute' => 'category_id',
+                'value' => $model->category->name,
+                'header' => 'Category',
+            ],
         ],
     ]) ?>
 

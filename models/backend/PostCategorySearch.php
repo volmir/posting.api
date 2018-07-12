@@ -5,22 +5,19 @@ namespace app\models\backend;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Post;
-use app\models\User;
-use yii\helpers\ArrayHelper;
+use app\models\PostCategory;
 
 /**
- * PostSearch represents the model behind the search form of `app\models\Post`.
+ * PostCategorySearch represents the model behind the search form of `app\models\PostCategory`.
  */
-class PostSearch extends Post {
+class PostCategorySearch extends PostCategory {
 
     /**
      * {@inheritdoc}
      */
     public function rules() {
         return [
-            [['id', 'user_id', 'status'], 'integer'],
-            [['title', 'content', 'date_create'], 'safe'],
+            [['id', 'post_id', 'category_id'], 'integer'],
         ];
     }
 
@@ -40,8 +37,8 @@ class PostSearch extends Post {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        $query = Post::find()
-                ->with('user');
+        $query = PostCategory::find()
+                ->with(['post', 'category']);
 
         // add conditions that should always apply here
 
@@ -50,11 +47,6 @@ class PostSearch extends Post {
             'sort' => [
                 'defaultOrder' => ['id' => SORT_DESC],
             ],
-            'pagination' => [
-                'forcePageParam' => false, 
-                'pageSizeParam' => false,
-                'pageSize' => 20
-            ],            
         ]);
 
         $this->load($params);
@@ -68,25 +60,11 @@ class PostSearch extends Post {
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'date_create' => $this->date_create,
-            'status' => $this->status,
+            'post_id' => $this->post_id,
+            'category_id' => $this->category_id,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-                ->andFilterWhere(['like', 'content', $this->content]);
-
         return $dataProvider;
-    }
-
-    public static function getUserList() {
-        $users = User::find()
-                ->select(['user.id', 'username'])
-                ->join('JOIN', 'post p', 'user.id = p.user_id')
-                ->distinct(true)
-                ->all();
-
-        return ArrayHelper::map($users, 'id', 'username');
     }
 
 }

@@ -73,7 +73,7 @@ class Post extends \yii\db\ActiveRecord
         ];
     }
     
-    public function getUsers()
+    public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }

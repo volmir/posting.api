@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             [
                 'attribute' => 'user_id',
-                'value' => 'users.username',
+                'value' => 'user.username',
                 'header' => 'User',
                 'filter' => PostSearch::getUserList(),
             ],
