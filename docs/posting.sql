@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 10 2018 г., 17:47
+-- Время создания: Июл 12 2018 г., 17:50
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `category` (
   `id` int(10) UNSIGNED NOT NULL,
-  `parent_id` int(10) UNSIGNED DEFAULT NULL,
+  `parent_id` int(10) UNSIGNED DEFAULT '0',
   `name` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -93,12 +93,13 @@ INSERT INTO `post` (`id`, `user_id`, `title`, `content`, `date_create`, `status`
 (6, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-06-27 16:53:22', 1),
 (7, 1, 'Another post name', 'Another value of field type must be part of list: blue, red, green', '2018-06-27 16:55:12', 1),
 (8, 1, 'Post title', 'Content text', '2018-06-27 16:56:11', 1),
-(10, 1, 'Some post name', 'Another value of field type must be part of list: blue, red, green', '2018-07-02 15:23:58', 1),
+(10, 1, 'Another post name', 'Another value of field type must be part of list: blue, red, green', '2018-07-02 15:23:58', 1),
 (12, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-02 16:37:11', 1),
 (18, 2, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 10:29:25', 0),
 (27, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 11:53:01', 2),
 (28, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 13:29:51', 2),
-(31, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-09 11:22:45', 1);
+(31, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-09 11:22:45', 1),
+(32, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-12 16:03:09', 1);
 
 -- --------------------------------------------------------
 
@@ -117,27 +118,11 @@ CREATE TABLE `post_vs_category` (
 --
 
 INSERT INTO `post_vs_category` (`id`, `post_id`, `category_id`) VALUES
-(1, 1, 1);
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `tree`
---
-
-CREATE TABLE `tree` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL COMMENT 'имя',
-  `tree_id` int(11) DEFAULT NULL COMMENT 'предок'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Дамп данных таблицы `tree`
---
-
-INSERT INTO `tree` (`id`, `name`, `tree_id`) VALUES
-(14, 'asdfd', NULL),
-(16, 'asdfdkjk', 14);
+(4, 1, 2),
+(1, 1, 9),
+(5, 2, 5),
+(7, 2, 7),
+(6, 3, 11);
 
 -- --------------------------------------------------------
 
@@ -184,7 +169,6 @@ INSERT INTO `user` (`id`, `username`, `password`, `email`, `auth_key`, `access_t
 ALTER TABLE `category`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`),
-  ADD UNIQUE KEY `name` (`name`),
   ADD KEY `parent_id` (`parent_id`);
 
 --
@@ -210,15 +194,6 @@ ALTER TABLE `post_vs_category`
   ADD KEY `FK_posts_vs_categories_categories` (`category_id`);
 
 --
--- Индексы таблицы `tree`
---
-ALTER TABLE `tree`
-  ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD UNIQUE KEY `id` (`id`) USING BTREE,
-  ADD UNIQUE KEY `name` (`name`) USING BTREE,
-  ADD KEY `tree_id` (`tree_id`) USING BTREE;
-
---
 -- Индексы таблицы `user`
 --
 ALTER TABLE `user`
@@ -237,7 +212,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT для таблицы `post`
 --
@@ -247,20 +222,21 @@ ALTER TABLE `post`
 -- AUTO_INCREMENT для таблицы `post_vs_category`
 --
 ALTER TABLE `post_vs_category`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT для таблицы `tree`
---
-ALTER TABLE `tree`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
+
+--
+-- Ограничения внешнего ключа таблицы `category`
+--
+ALTER TABLE `category`
+  ADD CONSTRAINT `category_fk1` FOREIGN KEY (`parent_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `post`
@@ -274,12 +250,6 @@ ALTER TABLE `post`
 ALTER TABLE `post_vs_category`
   ADD CONSTRAINT `FK_posts_vs_categories_categories` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_posts_vs_categories_posts` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON UPDATE CASCADE;
-
---
--- Ограничения внешнего ключа таблицы `tree`
---
-ALTER TABLE `tree`
-  ADD CONSTRAINT `treee_fk1` FOREIGN KEY (`tree_id`) REFERENCES `tree` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

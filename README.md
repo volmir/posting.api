@@ -2,7 +2,7 @@
 REST API application
 
 
-***API***
+***API v1.0***
 
 **JSON and XML responce**
 
@@ -23,7 +23,7 @@ curl -i -X POST http://posting.local/api/v1/user/auth -d '{"username":"admin","p
 curl -i -X GET http://posting.local/api/v1/user
 ```
 
-**API URL's examples**
+**Posts**
 
 ```
 curl -i -X GET http://posting.local/api/v1/post
@@ -35,7 +35,7 @@ curl -i -X PATCH http://posting.local/api/v1/post/7 -d '{"title":"Some post titl
 curl -i -X DELETE http://posting.local/api/v1/post/8
 ```
 
-**AJAX API URL's call examples**
+**Posts (AJAX API URL's call examples)**
 
 ```
 $.ajax({url: 'http://posting.local/api/v1/post', method: 'GET', dataType: 'json', success: function(response){console.log(response)}})
