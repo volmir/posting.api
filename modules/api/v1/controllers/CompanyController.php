@@ -8,7 +8,7 @@ use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
-use app\models\UserCompany;
+use app\modules\api\v1\models\UserCompany;
 
 class CompanyController extends Controller {
 
@@ -58,8 +58,6 @@ class CompanyController extends Controller {
             $user->id = $this->user->id;
             $user->username = $this->user->username;
             $user->email = $this->user->email;
-            $user->firstname = $this->user->firstname;
-            $user->lastname = $this->user->lastname;
             $user->created_at = $this->user->created_at;
 
             $this->result = $user;

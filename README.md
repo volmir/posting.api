@@ -16,7 +16,7 @@ curl -i -X GET http://posting.local/api/v1 --header 'Accept: application/xml'
 ```
 curl -i -X POST http://posting.local/api/v1/company/auth -d '{"username":"company","password":"company"}'
 curl -i -X POST http://posting.local/api/v1/specialist/auth -d '{"username":"specialist","password":"specialist"}'
-curl -i -X POST http://posting.local/api/v1/specialist/auth -d '{"username":"client","password":"client"}'
+curl -i -X POST http://posting.local/api/v1/client/auth -d '{"username":"client","password":"client"}'
 ```
 
 **Company**
@@ -38,6 +38,12 @@ curl -i -X GET http://posting.local/api/v1/specialist
 ```
 curl -i -X POST http://posting.local/api/v1/client/create -d '{"username":"client865","password":"784832","email":"client865@example.com","firstname":"John","lastname":"Smith"}'
 curl -i -X GET http://posting.local/api/v1/client
+```
+
+**Categories**
+
+```
+curl -i -X GET http://posting.local/api/v1/category
 ```
 
 **Posts**

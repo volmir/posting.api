@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 12 2018 г., 17:50
+-- Время создания: Июл 13 2018 г., 17:24
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -120,8 +120,8 @@ CREATE TABLE `post_vs_category` (
 INSERT INTO `post_vs_category` (`id`, `post_id`, `category_id`) VALUES
 (4, 1, 2),
 (1, 1, 9),
+(7, 2, 4),
 (5, 2, 5),
-(7, 2, 7),
 (6, 3, 11);
 
 -- --------------------------------------------------------
@@ -142,6 +142,7 @@ CREATE TABLE `user` (
   `firstname` varchar(100) NOT NULL DEFAULT '',
   `lastname` varchar(100) NOT NULL DEFAULT '',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `type` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -149,15 +150,21 @@ CREATE TABLE `user` (
 -- Дамп данных таблицы `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `email`, `auth_key`, `access_token`, `password_reset_token`, `email_confirm_token`, `firstname`, `lastname`, `status`, `created_at`) VALUES
-(1, 'admin', '$2y$13$NUQnYWDs.e/AmtLmH5mYqukSIm49KU3/bNG35MkWysMTbVixFZGuO', 'admin@mail.com', 'Q7cqvkF62XPvMVaR7hz-2SvVLvjpFvik', '2KfdjUr34K5k73HJIKkrdf92dkLk', '5Tfb10xbacBLZzpxZLo82d5gD7F4S9f5_1530881096', '', 'Alexandr', 'Petrov', 1, '2018-06-27 12:36:15'),
-(2, 'tester', '$2y$13$CIgZx8YApWllOm7S73G3E.Xmw4RjQfCNx0x9uxBu9Zd/rDX4Fy5ES', 'tester@mail.com', 'qNfV-scJqYjpQlvCfXtztUZcS0xCf_ex', 'sjWk72kls39kdjk733KL3Llk2LJio', '', '', 'Nikolay', 'Ivanov', 1, '2018-07-03 14:14:29'),
-(14, 'user', '$2y$13$.tF0DEF2KF4Pjl5niST.XO2r5KmXCFrnYTzuLXOyYfpLYy0nhbEEy', 'user@gmail.com', 'OcCmB99oZIHWdakCClitar2fLN4JyarN', 'dH4Oica5nzKvFN-9kzr0jvu_FLNnC-27', '', '', 'Sergey', 'Ivanov', 1, '2018-07-05 15:45:10'),
-(16, 'volmir', '$2y$13$i29vkcMpe/HXboPS5HdbZep5bdhtgo7uSz/6g3quJoCZNu2HQcCi.', 'volmir@ukr.net', 'LJ6M08PIkaIJJC3HwOJaCBz1DeJSPZDU', '-ruS-QVb0c8pTuoUETAoi1BCmngOM5me', '', '', 'Vladimir', 'Prokhnenko', 1, '2018-07-05 16:45:05'),
-(18, 'admin3', '$2y$13$qG9DNS4LK2GjtWNWAp2xauqqqV9mnEYuqYgv5AsD3T42ZythTF/Eu', 'tester3@mail.com', 'E08yfBXa5SeNIrgH3EcSpC9wMjXFnJyf', 'DMZaVYEjmCW_fVzRC6G68uVhnlhF_W_g', '', '', '', '', 2, '2018-07-06 10:21:03'),
-(19, 'admin4', '$2y$13$hu4kUfThVIVtaoVzLI2rAuUm.GhGk.0k0RiNtjcG5NpPqz0cuxkpq', 'user4@gmail.com', 'ooOZm4SLw46tZ6L66KH63G5v7lrqV2Ew', '0HP_NRFN44tADAUAeUh06N07l2uQ0P_y', '', '', '', '', 1, '2018-07-06 10:30:59'),
-(21, 'user5', '$2y$13$uAR/PP6Yd3CjnngmIw9qceROIDQERz4OuE4vWujl6KVZ1etGw.8zW', 'user5@posting.local', 'tzX8AWLziYjQkxOQIQPpUXetXxoPVrbh', '_CEN8LZty__HqjfCXgVoANhEXDdghnc6', '', 'uNRoWVUQ_xa5BRiugtdj21tanDqexwxZ', '', '', 0, '2018-07-10 10:01:59'),
-(22, 'user7', '$2y$13$zNBG8kcKDZA15HdmH4QrYe7HyJzqo0NFrCDzuBiwwtFMQBPmE65IC', 'user7@posting.local', 'ScMrrOFZxnRcVY2acDmbxh6QTrEi3b1F', 'QWc-cuVus5-8hHHGaSgNX0LYs2qUri5G', '', '', 'Dasdfasfa', 'Kdfdsdfsdfsd', 1, '2018-07-10 13:20:03');
+INSERT INTO `user` (`id`, `username`, `password`, `email`, `auth_key`, `access_token`, `password_reset_token`, `email_confirm_token`, `firstname`, `lastname`, `status`, `type`, `created_at`) VALUES
+(1, 'admin', '$2y$13$NUQnYWDs.e/AmtLmH5mYqukSIm49KU3/bNG35MkWysMTbVixFZGuO', 'admin@mail.com', 'Q7cqvkF62XPvMVaR7hz-2SvVLvjpFvik', '2KfdjUr34K5k73HJIKkrdf92dkLk', '5Tfb10xbacBLZzpxZLo82d5gD7F4S9f5_1530881096', '', 'Alexandr', 'Petrov', 1, 1, '2018-06-27 12:36:15'),
+(2, 'tester', '$2y$13$CIgZx8YApWllOm7S73G3E.Xmw4RjQfCNx0x9uxBu9Zd/rDX4Fy5ES', 'tester@mail.com', 'qNfV-scJqYjpQlvCfXtztUZcS0xCf_ex', 'sjWk72kls39kdjk733KL3Llk2LJio', '', '', 'Nikolay', 'Ivanov', 1, 0, '2018-07-03 14:14:29'),
+(14, 'user', '$2y$13$.tF0DEF2KF4Pjl5niST.XO2r5KmXCFrnYTzuLXOyYfpLYy0nhbEEy', 'user@gmail.com', 'OcCmB99oZIHWdakCClitar2fLN4JyarN', 'dH4Oica5nzKvFN-9kzr0jvu_FLNnC-27', '', '', 'Sergey', 'Ivanov', 1, 0, '2018-07-05 15:45:10'),
+(16, 'volmir', '$2y$13$i29vkcMpe/HXboPS5HdbZep5bdhtgo7uSz/6g3quJoCZNu2HQcCi.', 'volmir@ukr.net', 'LJ6M08PIkaIJJC3HwOJaCBz1DeJSPZDU', '-ruS-QVb0c8pTuoUETAoi1BCmngOM5me', '', '', 'Vladimir', 'Prokhnenko', 1, 0, '2018-07-05 16:45:05'),
+(18, 'company', '$2y$13$xxPCurEkeBdqLEdGSJkR1ejUWxeytIRZjEYovyRUxPdlANR.ao2Be', 'company@mail.com', 'E08yfBXa5SeNIrgH3EcSpC9wMjXFnJyf', 'DMZaVYEjmCW_fVzRC6G68uVhnlhF_W_g', '', '', '', '', 1, 2, '2018-07-06 10:21:03'),
+(19, 'admin4', '$2y$13$hu4kUfThVIVtaoVzLI2rAuUm.GhGk.0k0RiNtjcG5NpPqz0cuxkpq', 'user4@gmail.com', 'ooOZm4SLw46tZ6L66KH63G5v7lrqV2Ew', '0HP_NRFN44tADAUAeUh06N07l2uQ0P_y', '', '', '', '', 2, 0, '2018-07-06 10:30:59'),
+(21, 'user5', '$2y$13$uAR/PP6Yd3CjnngmIw9qceROIDQERz4OuE4vWujl6KVZ1etGw.8zW', 'user5@posting.local', 'tzX8AWLziYjQkxOQIQPpUXetXxoPVrbh', '_CEN8LZty__HqjfCXgVoANhEXDdghnc6', '', 'uNRoWVUQ_xa5BRiugtdj21tanDqexwxZ', '', '', 0, 0, '2018-07-10 10:01:59'),
+(22, 'user7', '$2y$13$zNBG8kcKDZA15HdmH4QrYe7HyJzqo0NFrCDzuBiwwtFMQBPmE65IC', 'user7@posting.local', 'ScMrrOFZxnRcVY2acDmbxh6QTrEi3b1F', 'QWc-cuVus5-8hHHGaSgNX0LYs2qUri5G', '', '', 'Dasdfasfa', 'Kdfdsdfsdfsd', 1, 0, '2018-07-10 13:20:03'),
+(23, 'company2', '$2y$13$xxPCurEkeBdqLEdGSJkR1ejUWxeytIRZjEYovyRUxPdlANR.ao2Be', 'company2@mail.com', '0fdTFy-ZD86WhLLU3UVWiAM1H2-p-Rhv', 'kZvbjdipzmASLSbmHh3M9z7EB_ONZY8b', '', 'LHN7QnPFyGtA-3vaDzzYNKLW3UyIULY8', '', '', 0, 0, '2018-07-13 15:44:05'),
+(24, 'company837', '$2y$13$JjocHh9rHeJrbMqEH0iRLO8xTB3CTqs2o7ZdwbOGSu2qc6uy99zSK', 'company@example.com', 'VGBkVI4lVDPI9goVmD3C3MVvLGywUNmG', '3ddz359TQvQC3kaLiczgi4rn6Y66SLW9', '', 'w3n5MMJIxv0kmUqNebbW3L0St0AweXmU', '', '', 1, 2, '2018-07-13 16:30:22'),
+(25, 'specialist', '$2y$13$LS15CIMbxtROhrh4rfZoAuAs0F1/vKq3NiBP1ulgwaJT0aa4F37Y6', 'specialist@example.com', 'Q8VrAf6BADt_HBrcP8BFLYFKR8WBZL6D', '_xpE7SjDaxnl3MerLtld8xh3S3XG1U4T', '', 'zzXu0wnqQ2v4wRNcvmTmi7Sc8MGWppBN', '', '', 1, 3, '2018-07-13 16:45:42'),
+(27, 'specialist269', '$2y$13$S4cHl.PuFYZeZBzXemHVuu8MKAHZQVYClzAumFTXAUYjk/B2ssXyq', 'specialist47@example.com', '6aEJsOWZ3NcEtxTpy-M5TdQFbn6AmeqE', 'EjbjUIFUe5FrrZaSB0YQGkVHmbaN5Nia', '', 'r76GPG7MGwgaOn9sJuMS0XlRrlf_xLnU', 'John', 'Smith', 1, 3, '2018-07-13 17:05:09'),
+(28, 'client869', '$2y$13$dxK3sxvLwfDGb/5bYhtB2OblMVy3No5OJealB24Ph5Vx6kQaZAZli', 'client869@example.com', 'EN705PYVXeDIVaCy4IMGwHiPWA7waFAV', 'WIIbZ3XLCX4IifN2orhLygvoYYL1xdWR', '', 'I-uwYW54GEMfvcH8Pgz-5WrjY_i-vWwt', 'John', 'Smith', 1, 4, '2018-07-13 17:15:28'),
+(29, 'client', '$2y$13$F58K0HWi8Bvm/9oYIsaRlOnS7ewh8qjXIySzD9FSoAN9XXiTVx6ty', 'client@example.com', 'dLBSPihHn3HMqG4KKvYin38ooRIkqLjG', 'xcGiPQH-s_ejo-e1xNG_kAkK3WPELTfO', '', '_B2SWWQekzMMBliOf-oGty9pJC6SWV4o', 'John', 'Smith', 1, 4, '2018-07-13 17:15:46');
 
 --
 -- Индексы сохранённых таблиц
@@ -227,7 +234,7 @@ ALTER TABLE `post_vs_category`
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --

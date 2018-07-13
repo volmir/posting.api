@@ -8,7 +8,7 @@ use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
-use app\models\UserClient;
+use app\modules\api\v1\models\UserClient;
 
 class ClientController extends Controller {
 
@@ -84,10 +84,10 @@ class ClientController extends Controller {
                 $user->generateAccessToken();
                 $user->generateEmailConfirmToken();
                 $user->status = UserApi::STATUS_ACTIVE;
-                $user->type = UserApi::TYPE_SPECIALIST;
+                $user->type = UserApi::TYPE_CLIENT;
                 try {
                     if ($user->save()) {
-                        Yii::$app->response->headers->set('Location', '/api/v1/specialist/');
+                        Yii::$app->response->headers->set('Location', '/api/v1/client/');
                         ApiException::set(201);
                     }
                 } catch (\RuntimeException $e) {

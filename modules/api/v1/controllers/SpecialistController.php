@@ -8,7 +8,7 @@ use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
-use app\models\UserSpecialist;
+use app\modules\api\v1\models\UserSpecialist;
 
 class SpecialistController extends Controller {
 
