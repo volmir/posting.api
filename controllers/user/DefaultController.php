@@ -91,7 +91,8 @@ class DefaultController extends Controller
         }
 
         $model = new SignupForm();
-
+        $model->scenario = SignupForm::SCENARIO_WEB;
+        
         if ($model->load(Yii::$app->request->post())) {
             try {
                 if ($user = $model->signup()) {

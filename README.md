@@ -14,13 +14,30 @@ curl -i -X GET http://posting.local/api/v1 --header 'Accept: application/xml'
 **Authentification**
 
 ```
-curl -i -X POST http://posting.local/api/v1/user/auth -d '{"username":"admin","password":"admin"}'
+curl -i -X POST http://posting.local/api/v1/company/auth -d '{"username":"company","password":"company"}'
+curl -i -X POST http://posting.local/api/v1/specialist/auth -d '{"username":"specialist","password":"specialist"}'
+curl -i -X POST http://posting.local/api/v1/specialist/auth -d '{"username":"client","password":"client"}'
 ```
 
-**User**
+**Company**
 
 ```
-curl -i -X GET http://posting.local/api/v1/user
+curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com"}'
+curl -i -X GET http://posting.local/api/v1/company
+```
+
+**Specialist**
+
+```
+curl -i -X POST http://posting.local/api/v1/specialist/create -d '{"username":"specialist267","password":"284829","email":"specialist267@example.com","firstname":"John","lastname":"Smith"}'
+curl -i -X GET http://posting.local/api/v1/specialist
+```
+
+**Specialist**
+
+```
+curl -i -X POST http://posting.local/api/v1/client/create -d '{"username":"client865","password":"784832","email":"client865@example.com","firstname":"John","lastname":"Smith"}'
+curl -i -X GET http://posting.local/api/v1/client
 ```
 
 **Posts**

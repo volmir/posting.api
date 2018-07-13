@@ -8,6 +8,9 @@ use app\models\User;
 
 class SignupForm extends Model {
 
+    const SCENARIO_WEB = 'web';
+    const SCENARIO_API = 'api';
+
     public $username;
     public $password;
     public $email;
@@ -33,6 +36,13 @@ class SignupForm extends Model {
             [['firstname', 'lastname'], 'string'],
             ['verifyCode', 'captcha'],
         ];
+    }
+
+    public function scenarios() {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_WEB] = ['username', 'password', 'email', 'verifyCode'];
+        $scenarios[self::SCENARIO_API] = ['username', 'password', 'email'];
+        return $scenarios;
     }
 
     /**
@@ -72,9 +82,8 @@ class SignupForm extends Model {
     public function sentEmailConfirm(User $user) {
         $sent = \Yii::$app->mailer
                 ->compose(
-                        ['html' => 'userSignupConfirm-html', 'text' => 'userSignupConfirm-text'], 
-                        ['user' => $user]
-                        )
+                        ['html' => 'userSignupConfirm-html', 'text' => 'userSignupConfirm-text'], ['user' => $user]
+                )
                 ->setTo($user->email)
                 ->setFrom(Yii::$app->params['adminEmail'])
                 ->setSubject('Confirmation of registration')

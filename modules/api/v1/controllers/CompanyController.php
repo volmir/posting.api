@@ -8,8 +8,9 @@ use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
+use app\models\UserCompany;
 
-class UserController extends Controller {
+class CompanyController extends Controller {
 
     /**
      *
@@ -50,6 +51,8 @@ class UserController extends Controller {
      */
     public function actionIndex() {
         $this->user = Authentification::verify();
+        UserCompany::verify($this->user);
+
         if (Yii::$app->request->method == 'GET') {
             $user = new \stdClass();
             $user->id = $this->user->id;
@@ -60,6 +63,39 @@ class UserController extends Controller {
             $user->created_at = $this->user->created_at;
 
             $this->result = $user;
+        } else {
+            ApiException::set(400);
+        }
+
+        return $this->result;
+    }
+
+    public function actionCreate() {
+        if (Yii::$app->request->method == 'POST') {
+            $data = Yii::$app->request->post();
+            if (!empty($data['username']) && !empty($data['password']) && !empty($data['email'])) {
+
+                $user = new UserApi();
+                $user->username = $data['username'];
+                $user->password = \Yii::$app->security->generatePasswordHash($data['password']);
+                $user->email = $data['email'];
+                $user->generateAuthKey();
+                $user->generateAccessToken();
+                $user->generateEmailConfirmToken();
+                $user->status = UserApi::STATUS_ACTIVE;
+                $user->type = UserApi::TYPE_COMPANY;
+
+                try {
+                    if ($user->save()) {
+                        Yii::$app->response->headers->set('Location', '/api/v1/company/');
+                        ApiException::set(201);
+                    }
+                } catch (\RuntimeException $e) {
+                    ApiException::set(400);
+                }
+            } else {
+                ApiException::set(400);
+            }
         } else {
             ApiException::set(400);
         }
@@ -79,6 +115,7 @@ class UserController extends Controller {
                         ->where([
                             'username' => $data['username'],
                             'status' => UserApi::STATUS_ACTIVE,
+                            'type' => UserApi::TYPE_COMPANY,
                         ])
                         ->limit(1)
                         ->one();
