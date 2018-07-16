@@ -8,7 +8,7 @@ use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
-use app\modules\api\v1\models\UserSpecialist;
+use app\models\Specialist;
 
 class SpecialistController extends Controller {
 
@@ -51,13 +51,14 @@ class SpecialistController extends Controller {
      */
     public function actionIndex() {
         $this->user = Authentification::verify();
-        UserSpecialist::verify($this->user);
+        Authentification::verifyByType($this->user, UserApi::TYPE_SPECIALIST);
 
         if (Yii::$app->request->method == 'GET') {
             $user = new \stdClass();
             $user->id = $this->user->id;
             $user->username = $this->user->username;
             $user->email = $this->user->email;
+            $user->company_id = $this->user->specialist->company_id;
             $user->firstname = $this->user->firstname;
             $user->lastname = $this->user->lastname;
             $user->created_at = $this->user->created_at;
@@ -73,13 +74,14 @@ class SpecialistController extends Controller {
     public function actionCreate() {
         if (Yii::$app->request->method == 'POST') {
             $data = Yii::$app->request->post();
-            if (!empty($data['username']) && !empty($data['password']) && !empty($data['email'])) {
+            if (!empty($data['username']) && !empty($data['password']) && !empty($data['email']) && !empty($data['company_id'])) {
                 $user = new UserApi();
                 $user->username = $data['username'];
                 $user->password = \Yii::$app->security->generatePasswordHash($data['password']);
                 $user->email = $data['email'];
                 $user->firstname = (!empty($data['firstname']) ? $data['firstname'] : '');
                 $user->lastname = (!empty($data['lastname']) ? $data['lastname'] : '');
+                $user->phone = (!empty($data['phone']) ? $data['phone'] : '');
                 $user->generateAuthKey();
                 $user->generateAccessToken();
                 $user->generateEmailConfirmToken();
@@ -87,8 +89,20 @@ class SpecialistController extends Controller {
                 $user->type = UserApi::TYPE_SPECIALIST;
                 try {
                     if ($user->save()) {
-                        Yii::$app->response->headers->set('Location', '/api/v1/specialist/');
-                        ApiException::set(201);
+                        $specialist = new Specialist();
+                        $specialist->id = $user->id;
+                        $specialist->company_id = $data['company_id'];
+                        try {
+                            if ($specialist->save()) {
+                                Yii::$app->response->headers->set('Location', '/api/v1/specialist/');
+                                ApiException::set(201);
+                            } else {
+                                $user->delete();
+                                ApiException::set(400);
+                            }
+                        } catch (\RuntimeException $e) {
+                            ApiException::set(400);
+                        }
                     }
                 } catch (\RuntimeException $e) {
                     ApiException::set(400);

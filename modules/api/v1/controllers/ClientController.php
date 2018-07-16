@@ -8,7 +8,6 @@ use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
-use app\modules\api\v1\models\UserClient;
 
 class ClientController extends Controller {
 
@@ -51,7 +50,7 @@ class ClientController extends Controller {
      */
     public function actionIndex() {
         $this->user = Authentification::verify();
-        UserClient::verify($this->user);
+        Authentification::verifyByType($this->user, UserApi::TYPE_CLIENT);
 
         if (Yii::$app->request->method == 'GET') {
             $user = new \stdClass();
@@ -80,6 +79,7 @@ class ClientController extends Controller {
                 $user->email = $data['email'];
                 $user->firstname = (!empty($data['firstname']) ? $data['firstname'] : '');
                 $user->lastname = (!empty($data['lastname']) ? $data['lastname'] : '');
+                $user->phone = (!empty($data['phone']) ? $data['phone'] : '');
                 $user->generateAuthKey();
                 $user->generateAccessToken();
                 $user->generateEmailConfirmToken();

@@ -8,7 +8,7 @@ use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
-use app\modules\api\v1\models\UserCompany;
+use app\models\Company;
 
 class CompanyController extends Controller {
 
@@ -51,13 +51,15 @@ class CompanyController extends Controller {
      */
     public function actionIndex() {
         $this->user = Authentification::verify();
-        UserCompany::verify($this->user);
+        Authentification::verifyByType($this->user, UserApi::TYPE_COMPANY);
 
         if (Yii::$app->request->method == 'GET') {
             $user = new \stdClass();
             $user->id = $this->user->id;
             $user->username = $this->user->username;
             $user->email = $this->user->email;
+            $user->phone = $this->user->phone;
+            $user->description = $this->user->company->description;
             $user->created_at = $this->user->created_at;
 
             $this->result = $user;
@@ -77,6 +79,7 @@ class CompanyController extends Controller {
                 $user->username = $data['username'];
                 $user->password = \Yii::$app->security->generatePasswordHash($data['password']);
                 $user->email = $data['email'];
+                $user->phone = (!empty($data['phone']) ? $data['phone'] : '');
                 $user->generateAuthKey();
                 $user->generateAccessToken();
                 $user->generateEmailConfirmToken();
@@ -85,9 +88,22 @@ class CompanyController extends Controller {
 
                 try {
                     if ($user->save()) {
-                        Yii::$app->response->headers->set('Location', '/api/v1/company/');
-                        ApiException::set(201);
-                    }
+                        $company = new Company();
+                        $company->id = $user->id;
+                        $company->description = (!empty($data['description']) ? $data['description'] : '');
+                        try {
+                            if ($company->save()) {
+                                Yii::$app->response->headers->set('Location', '/api/v1/company/');
+                                ApiException::set(201);
+                            } else {
+                                $user->delete();
+                                ApiException::set(400);
+                            }
+                        } catch (\RuntimeException $e) {
+                            ApiException::set(400);
+                        }
+                    }                    
+                    
                 } catch (\RuntimeException $e) {
                     ApiException::set(400);
                 }

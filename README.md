@@ -22,21 +22,21 @@ curl -i -X POST http://posting.local/api/v1/client/auth -d '{"username":"client"
 **Company**
 
 ```
-curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com"}'
+curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","phone":"(099) 376-43-29","description":"Company short description"}'
 curl -i -X GET http://posting.local/api/v1/company
 ```
 
 **Specialist**
 
 ```
-curl -i -X POST http://posting.local/api/v1/specialist/create -d '{"username":"specialist267","password":"284829","email":"specialist267@example.com","firstname":"John","lastname":"Smith"}'
+curl -i -X POST http://posting.local/api/v1/specialist/create -d '{"username":"specialist267","password":"284829","email":"specialist267@example.com","firstname":"John","lastname":"Smith","phone":"(099) 376-43-29","company_id":"4"}'
 curl -i -X GET http://posting.local/api/v1/specialist
 ```
 
 **Specialist**
 
 ```
-curl -i -X POST http://posting.local/api/v1/client/create -d '{"username":"client865","password":"784832","email":"client865@example.com","firstname":"John","lastname":"Smith"}'
+curl -i -X POST http://posting.local/api/v1/client/create -d '{"username":"client865","password":"784832","email":"client865@example.com","firstname":"John","lastname":"Smith","phone":"(099) 376-43-29"}'
 curl -i -X GET http://posting.local/api/v1/client
 ```
 
@@ -45,6 +45,15 @@ curl -i -X GET http://posting.local/api/v1/client
 ```
 curl -i -X GET http://posting.local/api/v1/category
 ```
+
+**Orders**
+
+```
+curl -i -X GET http://posting.local/api/v1/currency
+curl -i -X GET http://posting.local/api/v1/order/status
+curl -i -X GET http://posting.local/api/v1/order
+```
+
 
 **Posts**
 

@@ -4,6 +4,9 @@ namespace app\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use app\models\Company;
+use app\models\Specialist;
+use app\models\Client;
 
 /**
  * This is the model class for table "user".
@@ -71,13 +74,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
             'status' => 'Status',
             'date_created' => 'Date Created',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPosts() {
-        return $this->hasMany(Post::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -201,4 +197,35 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPosts() {
+        return $this->hasMany(Post::className(), ['user_id' => 'id']);
+    }    
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */    
+    public function getCompany()
+    {
+        return $this->hasOne(Company::className(), ['id' => 'id']);
+    }    
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */    
+    public function getSpecialist()
+    {
+        return $this->hasOne(Specialist::className(), ['id' => 'id']);
+    }     
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */    
+    public function getClient()
+    {
+        return $this->hasOne(Client::className(), ['id' => 'id']);
+    }     
+    
 }
