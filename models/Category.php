@@ -13,6 +13,10 @@ use Yii;
  */
 class Category extends \yii\db\ActiveRecord {
 
+    const STATUS_WAIT = 0; 
+    const STATUS_ACTIVE = 1;
+    const STATUS_BLOCKED = 2;     
+    
     /**
      * {@inheritdoc}
      */

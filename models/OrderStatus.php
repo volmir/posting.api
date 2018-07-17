@@ -12,6 +12,11 @@ use Yii;
  */
 class OrderStatus extends \yii\db\ActiveRecord
 {
+    const ADDED = 1;
+    const TAKEN = 2;
+    const DONE = 3;
+    const CANCELLED = 4;
+    
     /**
      * {@inheritdoc}
      */

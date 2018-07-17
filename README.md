@@ -44,6 +44,16 @@ curl -i -X GET http://posting.local/api/v1/client
 
 ```
 curl -i -X GET http://posting.local/api/v1/category
+curl -i -X POST http://posting.local/api/v1/category -d '{"parent_id":"1","name":"Section 4.7"}'
+```
+
+**Schedule**
+
+```
+curl -i -X GET http://posting.local/api/v1/schedule/?specialist_id=5&date_from=2018-06-01&date_to=2018-08-01
+curl -i -X POST http://posting.local/api/v1/schedule -d '{"specialist_id":"5","date_from":"2018-07-15 14:00:00","date_to":"2018-07-15 15:00:00"}'
+curl -i -X PATCH http://posting.local/api/v1/schedule/7 -d '{"date_from":"2018-07-14 12:00:00","date_to":"2018-07-14 13:00:00"}'
+curl -i -X DELETE http://posting.local/api/v1/schedule/8
 ```
 
 **Orders**
@@ -52,8 +62,12 @@ curl -i -X GET http://posting.local/api/v1/category
 curl -i -X GET http://posting.local/api/v1/currency
 curl -i -X GET http://posting.local/api/v1/order/status
 curl -i -X GET http://posting.local/api/v1/order
+curl -i -X GET http://posting.local/api/v1/order/2
+curl -i -X POST http://posting.local/api/v1/order -d '{"specialist_id":"5","date_from":"2018-07-15 16:00:00","date_to":"2018-07-15 17:00:00","client_id":"3","status_client":"1","status_specialist":"1"}'
+curl -i -X POST http://posting.local/api/v1/order -d '{"schedule_id":"7","client_id":"3","status_client":"1","status_specialist":"1"}'
+curl -i -X PATCH http://posting.local/api/v1/order/9 -d '{"status_client":"2","status_specialist":"2"}'
+curl -i -X DELETE http://posting.local/api/v1/order/6
 ```
-
 
 **Posts**
 

@@ -7,9 +7,10 @@ use yii\web\Controller;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\Category;
+use app\models\User;
 
 class CategoryController extends Controller {
-    
+
     /**
      *
      * @var mixed
@@ -20,7 +21,7 @@ class CategoryController extends Controller {
      *
      * @var app\modules\api\v1\models\UserApi
      */
-    protected $user;    
+    protected $user;
 
     public function init() {
         $this->enableCsrfValidation = false;
@@ -50,16 +51,55 @@ class CategoryController extends Controller {
      */
     public function actionIndex() {
         $this->user = Authentification::verify();
-        
-        if (Yii::$app->request->method == 'GET') {
-            $category = Category::find()->all();
 
-            $this->result = $category;
+        if (Yii::$app->request->method == 'GET') {
+            $this->get();
+        } elseif (Yii::$app->request->method == 'POST') {
+            $this->post();
         } else {
             ApiException::set(400);
         }
 
         return $this->result;
+    }
+
+    private function post() {
+        Authentification::verifyByType($this->user, User::TYPE_COMPANY);
+        
+        $data = Yii::$app->request->post();
+        if (isset($data['parent_id']) && !empty($data['name'])) {
+            $category = Category::find()
+                    ->where([
+                        'parent_id' => (int)$data['parent_id'],
+                        'name' => $data['name'],
+                    ])
+                    ->one();
+            if ($category instanceof Category) {
+                ApiException::set(400);
+            }
+
+            $category = new Category();
+            $category->parent_id = (int)$data['parent_id'];
+            $category->name = $data['name'];
+            if ($category->save()) {
+                Yii::$app->response->headers->set('Location', '/api/v1/category/' . $category->getPrimaryKey());
+                ApiException::set(201);
+            } else {
+                ApiException::set(400);
+            }
+        } else {
+            ApiException::set(400);
+        }
+    }
+
+    private function get() {
+        $category = Category::find()
+                ->select(['id', 'parent_id', 'name'])
+                ->where(['status' => Category::STATUS_ACTIVE])
+                ->andWhere(['!=', 'id', 0])
+                ->all();
+
+        $this->result = $category;
     }
 
 }

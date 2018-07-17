@@ -18,7 +18,10 @@ class CategoryController extends Controller {
      * @return string
      */
     public function actionIndex() {
-        $categories = Category::find()->all();
+        $categories = Category::find()
+                ->where(['status' => Category::STATUS_ACTIVE])
+                ->andWhere(['!=', 'id', 0])
+                ->all();
         
         return $this->render('index', [
             'categories' => $categories,

@@ -15,6 +15,9 @@ use Yii;
  */
 class Client extends \yii\db\ActiveRecord
 {
+    
+    const VIRTUAL_CLIENT = 3;
+    
     /**
      * {@inheritdoc}
      */

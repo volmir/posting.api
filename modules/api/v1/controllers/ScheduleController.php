@@ -4,18 +4,19 @@ namespace app\modules\api\v1\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\models\Post;
-use app\modules\api\v1\models\Authentification;
 use app\modules\api\v1\exceptions\ApiException;
+use app\modules\api\v1\models\Authentification;
+use app\models\User;
+use app\models\Schedule;
 
-class PostController extends Controller {
-
+class ScheduleController extends Controller {
+    
     /**
      *
      * @var int
      */
-    private $page_limit = 10;
-
+    protected $row_id;
+    
     /**
      *
      * @var mixed
@@ -27,15 +28,9 @@ class PostController extends Controller {
      * @var app\modules\api\v1\models\UserApi
      */
     protected $user;
-    /**
-     *
-     * @var int
-     */
-    protected $row_id;
 
     public function init() {
         $this->enableCsrfValidation = false;
-        $this->user = Authentification::verify();
     }
 
     /**
@@ -62,17 +57,17 @@ class PostController extends Controller {
      */
     public function actionIndex($id = 0) {
         $this->row_id = $id;
+        
+        $this->user = Authentification::verify();
 
-        if (Yii::$app->request->method == 'POST') {
+        if (Yii::$app->request->method == 'GET') {
+            $this->get();
+        } elseif (Yii::$app->request->method == 'POST') {
             $this->post();
-        } elseif (Yii::$app->request->method == 'PUT') {
-            $this->put();
         } elseif (Yii::$app->request->method == 'PATCH') {
             $this->patch();
         } elseif (Yii::$app->request->method == 'DELETE') {
-            $this->delete();
-        } elseif (Yii::$app->request->method == 'GET') {
-            $this->get();
+            $this->delete();            
         } else {
             ApiException::set(400);
         }
@@ -81,35 +76,38 @@ class PostController extends Controller {
     }
 
     private function get() {
-        if ($this->row_id > 0) {
-            $this->result = Post::find()
-                    ->where([
-                        'id' => $this->row_id,
-                        'user_id' => $this->user->id,
-                    ])
-                    ->one();
+        $data = Yii::$app->request->get();
+        if (!empty($data['specialist_id']) && $this->user->id == $data['specialist_id'] && !empty($data['date_from']) && !empty($data['date_to'])) {
+            $schedule = Schedule::find()
+                ->where(['specialist_id' => $data['specialist_id']])
+                ->andWhere('>', 'date_from', $data['date_from'])
+                ->andWhere('<', 'date_to', $data['date_to'])
+                ->all();
+
+            $this->result = $schedule;
         } else {
-            $this->result = Post::find()
-                    ->where([
-                        'user_id' => $this->user->id,
-                    ])
-                    ->limit($this->page_limit)
-                    ->all();
-        }
-        if (!count($this->result)) {
-            ApiException::set(404);
+            ApiException::set(400);
         }
     }
 
     private function post() {
         $data = Yii::$app->request->post();
-        if (!empty($data['title']) && !empty($data['content'])) {
-            $post = new Post();
-            $post->user_id = $this->user->id;
-            $post->title = $data['title'];
-            $post->content = $data['content'];
-            if ($post->save()) {
-                Yii::$app->response->headers->set('Location', '/api/v1/posts/' . $post->getPrimaryKey());
+        if (isset($data['parent_id']) && !empty($data['name'])) {
+            $schedule = Schedule::find()
+                    ->where([
+                        'parent_id' => (int)$data['parent_id'],
+                        'name' => $data['name'],
+                    ])
+                    ->one();
+            if ($schedule instanceof Schedule) {
+                ApiException::set(400);
+            }
+
+            $schedule = new Schedule();
+            $schedule->parent_id = (int)$data['parent_id'];
+            $schedule->name = $data['name'];
+            if ($schedule->save()) {
+                Yii::$app->response->headers->set('Location', '/api/v1/schedule/' . $schedule->getPrimaryKey());
                 ApiException::set(201);
             } else {
                 ApiException::set(400);
@@ -118,51 +116,25 @@ class PostController extends Controller {
             ApiException::set(400);
         }
     }
-
-    private function put() {
-        $data = Yii::$app->request->post();
-        if ($this->row_id > 0 && !empty($data['title']) && !empty($data['content'])) {
-            $post = Post::find()
-                    ->where([
-                        'id' => $this->row_id,
-                        'user_id' => $this->user->id,
-                    ])
-                    ->one();
-            if ($post instanceof Post) {
-                $post->title = $data['title'];
-                $post->content = $data['content'];
-
-                if ($post->save()) {
-                    ApiException::set(200);
-                } else {
-                    ApiException::set(400);
-                }
-            } else {
-                ApiException::set(404);
-            }
-        } else {
-            ApiException::set(400);
-        }
-    }
-
+    
     private function patch() {
         $data = Yii::$app->request->post();
         if ($this->row_id > 0 && (!empty($data['title']) || !empty($data['content']))) {
-            $post = Post::find()
+            $schedule = Schedule::find()
                     ->where([
                         'id' => $this->row_id,
-                        'user_id' => $this->user->id,
+                        'specialist_id' => $this->user->id,
                     ])
                     ->one();
-            if ($post instanceof Post) {
+            if ($schedule instanceof Schedule) {
                 if (!empty($data['title'])) {
-                    $post->title = $data['title'];
+                    $schedule->title = $data['title'];
                 }
                 if (!empty($data['content'])) {
-                    $post->content = $data['content'];
+                    $schedule->content = $data['content'];
                 }
 
-                if ($post->save()) {
+                if ($schedule->save()) {
                     ApiException::set(200);
                 } else {
                     ApiException::set(400);
@@ -177,14 +149,14 @@ class PostController extends Controller {
 
     private function delete() {
         if ($this->row_id > 0) {
-            $post = Post::find()
+            $schedule = Schedule::find()
                     ->where([
                         'id' => $this->row_id,
-                        'user_id' => $this->user->id,
+                        'specialist_id' => $this->user->id,
                     ])
                     ->one();
-            if ($post instanceof Post) {
-                if ($post->delete()) {
+            if ($schedule instanceof Schedule) {
+                if ($schedule->delete()) {
                     ApiException::set(204);
                 } else {
                     ApiException::set(400);
@@ -195,6 +167,6 @@ class PostController extends Controller {
         } else {
             ApiException::set(400);
         }
-    }
+    }    
 
 }

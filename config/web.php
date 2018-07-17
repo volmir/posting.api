@@ -84,6 +84,8 @@ $config = [
                     'rules' => [
                         '' => 'default/index',
                         'post/<id:\d+>' => 'post',
+                        'order/<id:\d+>' => 'order',
+                        'schedule/<id:\d+>' => 'schedule',
                         '<controller:\w+>' => '<controller>/index',
                         '<controller>/<action>' => '<controller>/<action>',
                     ],

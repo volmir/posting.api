@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 16 2018 г., 17:56
+-- Время создания: Июл 17 2018 г., 17:55
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -29,25 +29,29 @@ SET time_zone = "+00:00";
 CREATE TABLE `category` (
   `id` int(10) UNSIGNED NOT NULL,
   `parent_id` int(10) UNSIGNED DEFAULT '0',
-  `name` varchar(250) NOT NULL
+  `name` varchar(250) NOT NULL,
+  `status` tinyint(4) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `category`
 --
 
-INSERT INTO `category` (`id`, `parent_id`, `name`) VALUES
-(1, 0, 'Раздел 1'),
-(2, 0, 'Раздел 2'),
-(3, 0, 'Раздел 3'),
-(4, 1, 'Раздел 1.1'),
-(5, 1, 'Раздел 1.2'),
-(6, 4, 'Раздел 1.1.1'),
-(7, 2, 'Раздел 2.1'),
-(8, 2, 'Раздел 2.2'),
-(9, 3, 'Раздел 3.1'),
-(10, 9, '3.1.1'),
-(11, 9, '3.1.2');
+INSERT INTO `category` (`id`, `parent_id`, `name`, `status`) VALUES
+(0, 0, '', 0),
+(1, 0, 'Раздел 1', 1),
+(2, 0, 'Раздел 2', 1),
+(3, 0, 'Раздел 3', 1),
+(4, 1, 'Раздел 1.1', 1),
+(5, 1, 'Раздел 1.2', 1),
+(6, 4, 'Раздел 1.1.1', 1),
+(7, 2, 'Раздел 2.1', 1),
+(8, 2, 'Раздел 2.2', 1),
+(9, 3, 'Раздел 3.1', 1),
+(10, 9, '3.1.1', 1),
+(11, 9, '3.1.2', 1),
+(12, 1, 'Section 4.7', 0),
+(13, 2, 'Section 4.7', 0);
 
 -- --------------------------------------------------------
 
@@ -147,9 +151,11 @@ CREATE TABLE `order` (
 --
 
 INSERT INTO `order` (`id`, `client_id`, `schedule_id`, `status_client`, `status_specialist`, `created_at`) VALUES
-(1, 3, 1, 1, 1, '2018-07-16 15:47:11'),
-(2, 3, 2, 1, 1, '2018-07-16 15:47:38'),
-(4, 3, 3, 1, 1, '2018-07-16 17:10:06');
+(1, 3, 1, 2, 1, '2018-07-16 15:47:11'),
+(2, 3, 2, 2, 1, '2018-07-16 15:47:38'),
+(4, 3, 3, 2, 1, '2018-07-16 17:10:06'),
+(5, 3, 4, 1, 1, '2018-07-17 13:07:17'),
+(9, 3, 7, 2, 2, '2018-07-17 15:16:15');
 
 -- --------------------------------------------------------
 
@@ -221,13 +227,14 @@ INSERT INTO `post` (`id`, `user_id`, `title`, `content`, `date_create`, `status`
 (6, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-06-27 16:53:22', 1),
 (7, 1, 'Another post name', 'Another value of field type must be part of list: blue, red, green', '2018-06-27 16:55:12', 1),
 (8, 1, 'Post title', 'Content text', '2018-06-27 16:56:11', 1),
-(10, 1, 'Another post name', 'Another value of field type must be part of list: blue, red, green', '2018-07-02 15:23:58', 1),
+(10, 1, 'Some post name', 'Another value of field type must be part of list: blue, red, green', '2018-07-02 15:23:58', 1),
 (12, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-02 16:37:11', 1),
 (18, 6, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 10:29:25', 0),
 (27, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 11:53:01', 2),
 (28, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-04 13:29:51', 2),
 (31, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-09 11:22:45', 1),
-(32, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-12 16:03:09', 1);
+(32, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-12 16:03:09', 1),
+(33, 1, 'Post title name', 'Value of field type must be part of list: seven, three, eight', '2018-07-17 16:12:59', 1);
 
 -- --------------------------------------------------------
 
@@ -272,7 +279,10 @@ CREATE TABLE `schedule` (
 INSERT INTO `schedule` (`id`, `specialist_id`, `date_from`, `date_to`) VALUES
 (1, 5, '2018-07-16 13:48:28', '2018-07-16 13:48:31'),
 (2, 5, '2018-07-16 12:50:26', '2018-07-16 12:50:34'),
-(3, 37, '2018-07-16 17:07:53', '2018-07-16 17:07:55');
+(3, 37, '2018-07-16 17:07:53', '2018-07-16 17:07:55'),
+(4, 5, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
+(7, 37, '2018-07-17 14:53:46', '2018-07-17 14:53:48'),
+(8, 5, '2018-07-15 16:00:00', '2018-07-15 17:00:00');
 
 -- --------------------------------------------------------
 
@@ -476,7 +486,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT для таблицы `currency`
 --
@@ -486,7 +496,7 @@ ALTER TABLE `currency`
 -- AUTO_INCREMENT для таблицы `order`
 --
 ALTER TABLE `order`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT для таблицы `order_status`
 --
@@ -501,7 +511,7 @@ ALTER TABLE `order_vs_service`
 -- AUTO_INCREMENT для таблицы `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 --
 -- AUTO_INCREMENT для таблицы `post_vs_category`
 --
@@ -511,7 +521,7 @@ ALTER TABLE `post_vs_category`
 -- AUTO_INCREMENT для таблицы `schedule`
 --
 ALTER TABLE `schedule`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT для таблицы `service`
 --

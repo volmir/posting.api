@@ -31,7 +31,8 @@ class CategoryController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        $query = Category::find();
+        $query = Category::find()
+                ->where('id != 0');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
