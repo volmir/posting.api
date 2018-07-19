@@ -24,6 +24,7 @@ curl -i -X POST http://posting.local/api/v1/client/auth -d '{"username":"client"
 ```
 curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","phone":"(099) 376-43-29","description":"Company short description"}'
 curl -i -X GET http://posting.local/api/v1/company
+curl --request POST --url http://posting.local/api/v1/company/upload --header 'Content-Type: application/x-www-form-urlencoded' --header 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' --form files=undefined
 ```
 
 **Specialist**
@@ -33,7 +34,7 @@ curl -i -X POST http://posting.local/api/v1/specialist/create -d '{"username":"s
 curl -i -X GET http://posting.local/api/v1/specialist
 ```
 
-**Specialist**
+**Client**
 
 ```
 curl -i -X POST http://posting.local/api/v1/client/create -d '{"username":"client865","password":"784832","email":"client865@example.com","firstname":"John","lastname":"Smith","phone":"(099) 376-43-29"}'
@@ -47,12 +48,24 @@ curl -i -X GET http://posting.local/api/v1/category
 curl -i -X POST http://posting.local/api/v1/category -d '{"parent_id":"1","name":"Section 4.7"}'
 ```
 
+**services**
+
+```
+curl -i -X GET http://posting.local/api/v1/service
+curl -i -X GET http://posting.local/api/v1/service/1
+curl -i -X POST http://posting.local/api/v1/service -d '{"category_id":"2","price":"12.55","currency_id":"1"}'
+curl -i -X DELETE http://posting.local/api/v1/service/4
+```
+
 **Schedule**
 
 ```
-curl -i -X GET http://posting.local/api/v1/schedule/?specialist_id=5&date_from=2018-06-01&date_to=2018-08-01
+curl -i -X GET http://posting.local/api/v1/schedule
+curl -i -X GET http://posting.local/api/v1/schedule?specialist_id=5
+curl -i -X GET http://posting.local/api/v1/schedule?date_from=2018-06-01&date_to=2018-08-01
 curl -i -X POST http://posting.local/api/v1/schedule -d '{"specialist_id":"5","date_from":"2018-07-15 14:00:00","date_to":"2018-07-15 15:00:00"}'
-curl -i -X PATCH http://posting.local/api/v1/schedule/7 -d '{"date_from":"2018-07-14 12:00:00","date_to":"2018-07-14 13:00:00"}'
+curl -i -X PUT http://posting.local/api/v1/schedule/7 -d '{"specialist_id":"37","date_from":"2018-07-14 12:00:00","date_to":"2018-07-14 13:00:00"}'
+curl -i -X PATCH http://posting.local/api/v1/schedule/7 -d '{"date_from":"2018-07-14 17:00:00","date_to":"2018-07-14 18:00:00"}'
 curl -i -X DELETE http://posting.local/api/v1/schedule/8
 ```
 

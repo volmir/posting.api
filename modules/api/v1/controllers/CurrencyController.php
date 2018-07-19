@@ -38,7 +38,7 @@ class CurrencyController extends Controller {
     }
 
     /**
-     * Renders the view for the module
+     * 
      * @return stdClass
      */
     public function actionIndex() {

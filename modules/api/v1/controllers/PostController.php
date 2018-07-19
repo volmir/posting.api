@@ -27,6 +27,7 @@ class PostController extends Controller {
      * @var app\modules\api\v1\models\UserApi
      */
     protected $user;
+    
     /**
      *
      * @var int
@@ -57,7 +58,7 @@ class PostController extends Controller {
     }
 
     /**
-     * Renders the view for the module
+     * 
      * @return stdClass
      */
     public function actionIndex($id = 0) {

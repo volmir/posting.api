@@ -7,6 +7,7 @@ use yii\helpers\ArrayHelper;
 use app\models\Company;
 use app\models\Specialist;
 use app\models\Client;
+use app\models\Upload;
 
 /**
  * This is the model class for table "user".
@@ -226,6 +227,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
     public function getClient()
     {
         return $this->hasOne(Client::className(), ['id' => 'id']);
+    }     
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUploads() {
+        return $this->hasMany(Upload::className(), ['user_id' => 'id']);
     }     
     
 }

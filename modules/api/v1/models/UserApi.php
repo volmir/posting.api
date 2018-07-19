@@ -3,6 +3,7 @@
 namespace app\modules\api\v1\models;
 
 use Yii;
+use app\models\Specialist;
 
 /**
  * This is the model class for table "user".
@@ -28,4 +29,23 @@ class UserApi extends \app\models\User {
         \Yii::$app->user->enableSession = false;
     }
 
+    /**
+     * 
+     * @param int $specialist_id
+     * @param \app\models\User $company
+     * @return boolean
+     */
+    public static function checkSpecialistCompany($specialist_id, $company) {
+        $specialist = Specialist::find()
+                ->where([
+                    'id' => $specialist_id,
+                    'company_id' => $company->id,
+                    ])
+                ->one();
+        if ($specialist instanceof Specialist) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

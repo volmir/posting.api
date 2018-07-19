@@ -62,6 +62,7 @@ class OrderController extends Controller {
     }
 
     /**
+     * 
      * @return stdClass
      */
     public function actionIndex($id = 0) {

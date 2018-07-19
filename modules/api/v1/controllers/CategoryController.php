@@ -46,7 +46,7 @@ class CategoryController extends Controller {
     }
 
     /**
-     * Renders the view for the module
+     * 
      * @return stdClass
      */
     public function actionIndex() {
@@ -63,6 +63,16 @@ class CategoryController extends Controller {
         return $this->result;
     }
 
+    private function get() {
+        $category = Category::find()
+                ->select(['id', 'parent_id', 'name'])
+                ->where(['status' => Category::STATUS_ACTIVE])
+                ->andWhere(['!=', 'id', 0])
+                ->all();
+
+        $this->result = $category;
+    }
+    
     private function post() {
         Authentification::verifyByType($this->user, User::TYPE_COMPANY);
         
@@ -70,7 +80,7 @@ class CategoryController extends Controller {
         if (isset($data['parent_id']) && !empty($data['name'])) {
             $category = Category::find()
                     ->where([
-                        'parent_id' => (int)$data['parent_id'],
+                        'parent_id' => $data['parent_id'],
                         'name' => $data['name'],
                     ])
                     ->one();
@@ -90,16 +100,6 @@ class CategoryController extends Controller {
         } else {
             ApiException::set(400);
         }
-    }
-
-    private function get() {
-        $category = Category::find()
-                ->select(['id', 'parent_id', 'name'])
-                ->where(['status' => Category::STATUS_ACTIVE])
-                ->andWhere(['!=', 'id', 0])
-                ->all();
-
-        $this->result = $category;
     }
 
 }

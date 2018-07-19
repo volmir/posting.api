@@ -47,6 +47,7 @@ class SpecialistController extends Controller {
     }
 
     /**
+     * 
      * @return stdClass
      */
     public function actionIndex() {
