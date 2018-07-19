@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 17 2018 г., 17:55
+-- Время создания: Июл 19 2018 г., 18:06
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -282,7 +282,11 @@ INSERT INTO `schedule` (`id`, `specialist_id`, `date_from`, `date_to`) VALUES
 (3, 37, '2018-07-16 17:07:53', '2018-07-16 17:07:55'),
 (4, 5, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
 (7, 37, '2018-07-17 14:53:46', '2018-07-17 14:53:48'),
-(8, 5, '2018-07-15 16:00:00', '2018-07-15 17:00:00');
+(8, 5, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
+(9, 5, '2018-07-15 14:00:00', '2018-07-15 15:00:00'),
+(10, 37, '2018-07-15 14:00:00', '2018-07-15 15:00:00'),
+(11, 37, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
+(13, 5, '2018-07-15 17:00:00', '2018-07-15 18:00:00');
 
 -- --------------------------------------------------------
 
@@ -305,7 +309,8 @@ CREATE TABLE `service` (
 INSERT INTO `service` (`id`, `category_id`, `company_id`, `price`, `currency_id`) VALUES
 (1, 1, 4, '10.00', 1),
 (2, 2, 4, '15.00', 1),
-(3, 4, 4, '30.00', 1);
+(3, 4, 4, '30.00', 1),
+(5, 6, 4, '40.95', 1);
 
 -- --------------------------------------------------------
 
@@ -326,6 +331,27 @@ CREATE TABLE `specialist` (
 INSERT INTO `specialist` (`id`, `company_id`, `description`) VALUES
 (5, 4, NULL),
 (37, 4, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `upload`
+--
+
+CREATE TABLE `upload` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `ext` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `upload`
+--
+
+INSERT INTO `upload` (`id`, `user_id`, `ext`) VALUES
+(1, 4, 'jpg'),
+(2, 4, 'jpg'),
+(3, 4, 'jpg');
 
 -- --------------------------------------------------------
 
@@ -468,6 +494,13 @@ ALTER TABLE `specialist`
   ADD KEY `company_id` (`company_id`);
 
 --
+-- Индексы таблицы `upload`
+--
+ALTER TABLE `upload`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Индексы таблицы `user`
 --
 ALTER TABLE `user`
@@ -486,7 +519,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT для таблицы `currency`
 --
@@ -521,11 +554,16 @@ ALTER TABLE `post_vs_category`
 -- AUTO_INCREMENT для таблицы `schedule`
 --
 ALTER TABLE `schedule`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT для таблицы `service`
 --
 ALTER TABLE `service`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT для таблицы `upload`
+--
+ALTER TABLE `upload`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT для таблицы `user`
@@ -601,6 +639,12 @@ ALTER TABLE `service`
 ALTER TABLE `specialist`
   ADD CONSTRAINT `specialist_ibfk_1` FOREIGN KEY (`id`) REFERENCES `user` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `specialist_ibfk_2` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `upload`
+--
+ALTER TABLE `upload`
+  ADD CONSTRAINT `upload_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
