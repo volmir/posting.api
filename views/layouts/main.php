@@ -40,6 +40,7 @@ $menuItems = [
     ['label' => 'Home', 'url' => ['/site/index']],
     ['label' => 'About', 'url' => ['/about']],
     ['label' => 'Contact', 'url' => ['/contact']],
+    ['label' => 'Order', 'url' => ['/order']],
     ['label' => 'Categories', 'url' => ['/category']],
 ];
  

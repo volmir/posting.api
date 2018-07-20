@@ -71,6 +71,7 @@ class CompanyController extends Controller {
             $user->username = $this->user->username;
             $user->email = $this->user->email;
             $user->phone = $this->user->phone;
+            $user->address = $this->user->company->address;
             $user->description = $this->user->company->description;
             $user->created_at = $this->user->created_at;
             if (count($upload_files)) {
@@ -105,6 +106,7 @@ class CompanyController extends Controller {
                     if ($user->save()) {
                         $company = new Company();
                         $company->id = $user->id;
+                        $company->address = (!empty($data['address']) ? $data['address'] : '');
                         $company->description = (!empty($data['description']) ? $data['description'] : '');
                         try {
                             if ($company->save()) {

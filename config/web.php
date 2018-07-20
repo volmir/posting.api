@@ -27,7 +27,20 @@ $config = [
             'class' => 'app\modules\user\Module',
             'controllerNamespace' => 'app\controllers\user',
             'viewPath' => '@app/views/user',
-        ],  
+        ],
+        'liqpay' => [
+            'class' => 'app\modules\liqpay\Module',
+            'public_key' => 'iNNNNNNNNNNN',
+            'private_key' => 'NzOsdclMdKdjrm0LTpqDpPPlRDhoOQyIX1ISHjk',
+            'currency' => 'UAH',
+            'pay_way' => null,
+            'version' => 3,
+            'sandbox' => true,
+            'language' => 'ru',
+            'result_url' => '/order/thankyou',
+            'paymentName' => 'Оплата заказа',
+            'orderModel' => 'app\models\OrderPayment', 
+        ],
     ],
     'components' => [
         'request' => [

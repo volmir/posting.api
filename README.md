@@ -22,7 +22,7 @@ curl -i -X POST http://posting.local/api/v1/client/auth -d '{"username":"client"
 **Company**
 
 ```
-curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","phone":"(099) 376-43-29","description":"Company short description"}'
+curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","phone":"(099) 376-43-29","address":"Kiev, 01001, Third st. 27, of. 709","description":"Company short description"}'
 curl -i -X GET http://posting.local/api/v1/company
 curl --request POST --url http://posting.local/api/v1/company/upload --header 'Content-Type: application/x-www-form-urlencoded' --header 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' --form files=undefined
 ```
