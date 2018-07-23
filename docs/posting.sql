@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 20 2018 г., 17:50
+-- Время создания: Июл 23 2018 г., 17:41
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -69,7 +69,8 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`id`, `description`) VALUES
-(3, 'Virtual client');
+(3, 'Virtual client'),
+(28, 'Client description');
 
 -- --------------------------------------------------------
 
@@ -173,7 +174,8 @@ INSERT INTO `order` (`id`, `client_id`, `schedule_id`, `status_client`, `status_
 (2, 3, 2, 2, 1, '2018-07-16 15:47:38'),
 (4, 3, 3, 2, 1, '2018-07-16 17:10:06'),
 (5, 3, 4, 1, 1, '2018-07-17 13:07:17'),
-(9, 3, 7, 2, 2, '2018-07-17 15:16:15');
+(9, 3, 7, 2, 2, '2018-07-17 15:16:15'),
+(11, 28, 21, 1, 1, '2018-07-23 12:17:50');
 
 -- --------------------------------------------------------
 
@@ -300,11 +302,13 @@ INSERT INTO `schedule` (`id`, `specialist_id`, `date_from`, `date_to`) VALUES
 (3, 37, '2018-07-16 17:07:53', '2018-07-16 17:07:55'),
 (4, 5, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
 (7, 37, '2018-07-17 14:53:46', '2018-07-17 14:53:48'),
-(8, 5, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
 (9, 5, '2018-07-15 14:00:00', '2018-07-15 15:00:00'),
 (10, 37, '2018-07-15 14:00:00', '2018-07-15 15:00:00'),
 (11, 37, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
-(13, 5, '2018-07-15 17:00:00', '2018-07-15 18:00:00');
+(13, 5, '2018-07-15 17:00:00', '2018-07-15 18:00:00'),
+(15, 5, '2018-07-15 18:00:00', '2018-07-15 19:00:00'),
+(20, 5, '2018-07-15 19:30:00', '2018-07-15 19:31:00'),
+(21, 37, '2018-07-15 16:00:00', '2018-07-15 17:00:00');
 
 -- --------------------------------------------------------
 
@@ -327,7 +331,7 @@ CREATE TABLE `service` (
 INSERT INTO `service` (`id`, `category_id`, `company_id`, `price`, `currency_id`) VALUES
 (1, 1, 4, '10.00', 1),
 (2, 2, 4, '15.00', 1),
-(3, 4, 4, '30.00', 1),
+(3, 4, 4, '32.56', 3),
 (5, 6, 4, '40.95', 1);
 
 -- --------------------------------------------------------
@@ -347,8 +351,8 @@ CREATE TABLE `specialist` (
 --
 
 INSERT INTO `specialist` (`id`, `company_id`, `description`) VALUES
-(5, 4, NULL),
-(37, 4, NULL);
+(5, 4, 'Active specialist'),
+(37, 4, 'Great work experience');
 
 -- --------------------------------------------------------
 
@@ -359,6 +363,7 @@ INSERT INTO `specialist` (`id`, `company_id`, `description`) VALUES
 CREATE TABLE `upload` (
   `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `type` int(4) UNSIGNED NOT NULL,
   `ext` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -366,10 +371,10 @@ CREATE TABLE `upload` (
 -- Дамп данных таблицы `upload`
 --
 
-INSERT INTO `upload` (`id`, `user_id`, `ext`) VALUES
-(1, 4, 'jpg'),
-(2, 4, 'jpg'),
-(3, 4, 'jpg');
+INSERT INTO `upload` (`id`, `user_id`, `type`, `ext`) VALUES
+(1, 4, 1, 'jpg'),
+(2, 4, 1, 'jpg'),
+(3, 4, 1, 'jpg');
 
 -- --------------------------------------------------------
 
@@ -403,7 +408,7 @@ INSERT INTO `user` (`id`, `username`, `password`, `email`, `auth_key`, `access_t
 (2, 'user', '$2y$13$.tF0DEF2KF4Pjl5niST.XO2r5KmXCFrnYTzuLXOyYfpLYy0nhbEEy', 'user@gmail.com', 'OcCmB99oZIHWdakCClitar2fLN4JyarN', 'dH4Oica5nzKvFN-9kzr0jvu_FLNnC-27', '', '', 'Sergey', 'Ivanov', '', 1, 0, '2018-07-05 15:45:10'),
 (3, 'client', '$2y$13$F58K0HWi8Bvm/9oYIsaRlOnS7ewh8qjXIySzD9FSoAN9XXiTVx6ty', 'client@example.com', 'dLBSPihHn3HMqG4KKvYin38ooRIkqLjG', 'xcGiPQH-s_ejo-e1xNG_kAkK3WPELTfO', '', '_B2SWWQekzMMBliOf-oGty9pJC6SWV4o', 'John', 'Smith', '', 1, 4, '2018-07-13 17:15:46'),
 (4, 'company', '$2y$13$xxPCurEkeBdqLEdGSJkR1ejUWxeytIRZjEYovyRUxPdlANR.ao2Be', 'company@mail.com', 'E08yfBXa5SeNIrgH3EcSpC9wMjXFnJyf', 'DMZaVYEjmCW_fVzRC6G68uVhnlhF_W_g', '', '', 'Victor', 'Chernov', '(050) 384-70-16', 1, 2, '2018-07-06 10:21:03'),
-(5, 'specialist', '$2y$13$LS15CIMbxtROhrh4rfZoAuAs0F1/vKq3NiBP1ulgwaJT0aa4F37Y6', 'specialist@example.com', 'Q8VrAf6BADt_HBrcP8BFLYFKR8WBZL6D', '_xpE7SjDaxnl3MerLtld8xh3S3XG1U4T', '', 'zzXu0wnqQ2v4wRNcvmTmi7Sc8MGWppBN', 'Vasiliy', 'Kononenko', '', 1, 3, '2018-07-13 16:45:42'),
+(5, 'specialist', '$2y$13$LS15CIMbxtROhrh4rfZoAuAs0F1/vKq3NiBP1ulgwaJT0aa4F37Y6', 'specialist@example.com', 'Q8VrAf6BADt_HBrcP8BFLYFKR8WBZL6D', '_xpE7SjDaxnl3MerLtld8xh3S3XG1U4T', '', 'zzXu0wnqQ2v4wRNcvmTmi7Sc8MGWppBN', 'Vasiliy', 'Kononenko', '(095) 576-43-28', 1, 3, '2018-07-13 16:45:42'),
 (6, 'tester', '$2y$13$CIgZx8YApWllOm7S73G3E.Xmw4RjQfCNx0x9uxBu9Zd/rDX4Fy5ES', 'tester@mail.com', 'qNfV-scJqYjpQlvCfXtztUZcS0xCf_ex', 'sjWk72kls39kdjk733KL3Llk2LJio', '', '', 'Nikolay', 'Ivanov', '', 1, 0, '2018-07-03 14:14:29'),
 (10, 'volmir', '$2y$13$i29vkcMpe/HXboPS5HdbZep5bdhtgo7uSz/6g3quJoCZNu2HQcCi.', 'volmir@ukr.net', 'LJ6M08PIkaIJJC3HwOJaCBz1DeJSPZDU', '-ruS-QVb0c8pTuoUETAoi1BCmngOM5me', '', '', 'Vladimir', 'Prokhnenko', '', 1, 0, '2018-07-05 16:45:05'),
 (19, 'admin4', '$2y$13$hu4kUfThVIVtaoVzLI2rAuUm.GhGk.0k0RiNtjcG5NpPqz0cuxkpq', 'user4@gmail.com', 'ooOZm4SLw46tZ6L66KH63G5v7lrqV2Ew', '0HP_NRFN44tADAUAeUh06N07l2uQ0P_y', '', '', '', '', '', 2, 0, '2018-07-06 10:30:59'),
@@ -439,7 +444,8 @@ ALTER TABLE `client`
 ALTER TABLE `comment`
   ADD PRIMARY KEY (`id`),
   ADD KEY `company_id` (`company_id`),
-  ADD KEY `specialist_id` (`specialist_id`);
+  ADD KEY `specialist_id` (`specialist_id`),
+  ADD KEY `client_id` (`client_id`);
 
 --
 -- Индексы таблицы `company`
@@ -525,7 +531,8 @@ ALTER TABLE `specialist`
 --
 ALTER TABLE `upload`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `type` (`type`);
 
 --
 -- Индексы таблицы `user`
@@ -546,7 +553,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT для таблицы `comment`
 --
@@ -561,7 +568,7 @@ ALTER TABLE `currency`
 -- AUTO_INCREMENT для таблицы `order`
 --
 ALTER TABLE `order`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT для таблицы `order_status`
 --
@@ -586,7 +593,7 @@ ALTER TABLE `post_vs_category`
 -- AUTO_INCREMENT для таблицы `schedule`
 --
 ALTER TABLE `schedule`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT для таблицы `service`
 --
@@ -601,7 +608,7 @@ ALTER TABLE `upload`
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
@@ -623,7 +630,8 @@ ALTER TABLE `client`
 --
 ALTER TABLE `comment`
   ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`specialist_id`) REFERENCES `specialist` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`specialist_id`) REFERENCES `specialist` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `comment_ibfk_3` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `company`

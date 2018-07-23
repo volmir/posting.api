@@ -8,6 +8,7 @@ use app\modules\api\v1\models\UserApi;
 use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
+use app\models\Client;
 
 class ClientController extends Controller {
 
@@ -88,8 +89,20 @@ class ClientController extends Controller {
                 $user->type = UserApi::TYPE_CLIENT;
                 try {
                     if ($user->save()) {
-                        Yii::$app->response->headers->set('Location', '/api/v1/client/');
-                        ApiException::set(201);
+                        $client = new Client();
+                        $client->id = $user->id;
+                        $client->description = (!empty($data['description']) ? $data['description'] : '');
+                        try {
+                            if ($client->save()) {
+                                Yii::$app->response->headers->set('Location', '/api/v1/client/');
+                                ApiException::set(201);
+                            } else {
+                                $user->delete();
+                                ApiException::set(400);
+                            }
+                        } catch (\RuntimeException $e) {
+                            ApiException::set(400);
+                        }
                     }
                 } catch (\RuntimeException $e) {
                     ApiException::set(400);

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "categories".
@@ -10,6 +11,7 @@ use Yii;
  * @property int $id
  * @property int $parent_id
  * @property string $name
+ * @property int $status
  */
 class Category extends \yii\db\ActiveRecord {
 
@@ -32,6 +34,7 @@ class Category extends \yii\db\ActiveRecord {
             [['parent_id'], 'integer'],
             [['name'], 'required'],
             [['name'], 'string', 'max' => 250],
+            [['status'], 'integer'],
         ];
     }
 
@@ -43,8 +46,23 @@ class Category extends \yii\db\ActiveRecord {
             'id' => 'ID',
             'parent_id' => 'Parent ID',
             'name' => 'Name',
+            'status' => 'Status',
         ];
     }
+    
+    public function getStatusName()
+    {
+        return ArrayHelper::getValue(self::getStatusesArray(), $this->status);
+    }
+    
+    public static function getStatusesArray()
+    {
+        return [
+            self::STATUS_WAIT => 'WAIT',
+            self::STATUS_ACTIVE => 'ACTIVE',
+            self::STATUS_BLOCKED => 'BLOCKED',
+        ];
+    }    
 
     /**
      * @return \yii\db\ActiveQuery

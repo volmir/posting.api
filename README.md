@@ -24,6 +24,7 @@ curl -i -X POST http://posting.local/api/v1/client/auth -d '{"username":"client"
 ```
 curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","phone":"(099) 376-43-29","address":"Kiev, 01001, Third st. 27, of. 709","description":"Company short description"}'
 curl -i -X GET http://posting.local/api/v1/company
+curl -i -X GET http://posting.local/api/v1/company/specialist
 curl --request POST --url http://posting.local/api/v1/company/upload --header 'Content-Type: application/x-www-form-urlencoded' --header 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' --form files=undefined
 ```
 
@@ -37,7 +38,7 @@ curl -i -X GET http://posting.local/api/v1/specialist
 **Client**
 
 ```
-curl -i -X POST http://posting.local/api/v1/client/create -d '{"username":"client865","password":"784832","email":"client865@example.com","firstname":"John","lastname":"Smith","phone":"(099) 376-43-29"}'
+curl -i -X POST http://posting.local/api/v1/client/create -d '{"username":"client865","password":"784832","email":"client865@example.com","firstname":"John","lastname":"Smith","phone":"(099) 376-43-29","description":"Description"}'
 curl -i -X GET http://posting.local/api/v1/client
 ```
 
@@ -48,12 +49,14 @@ curl -i -X GET http://posting.local/api/v1/category
 curl -i -X POST http://posting.local/api/v1/category -d '{"parent_id":"1","name":"Section 4.7"}'
 ```
 
-**services**
+**Services**
 
 ```
 curl -i -X GET http://posting.local/api/v1/service
 curl -i -X GET http://posting.local/api/v1/service/1
 curl -i -X POST http://posting.local/api/v1/service -d '{"category_id":"2","price":"12.55","currency_id":"1"}'
+curl -i -X PUT http://posting.local/api/v1/service/3 -d '{"price":"18.96","currency_id":"2"}'
+curl -i -X PATCH http://posting.local/api/v1/service/3 -d '{"price":"12.55"}'
 curl -i -X DELETE http://posting.local/api/v1/service/4
 ```
 
@@ -61,6 +64,7 @@ curl -i -X DELETE http://posting.local/api/v1/service/4
 
 ```
 curl -i -X GET http://posting.local/api/v1/schedule
+curl -i -X GET http://posting.local/api/v1/schedule/2
 curl -i -X GET http://posting.local/api/v1/schedule?specialist_id=5
 curl -i -X GET http://posting.local/api/v1/schedule?date_from=2018-06-01&date_to=2018-08-01
 curl -i -X POST http://posting.local/api/v1/schedule -d '{"specialist_id":"5","date_from":"2018-07-15 14:00:00","date_to":"2018-07-15 15:00:00"}'
@@ -75,6 +79,12 @@ curl -i -X DELETE http://posting.local/api/v1/schedule/8
 curl -i -X GET http://posting.local/api/v1/currency
 curl -i -X GET http://posting.local/api/v1/order/status
 curl -i -X GET http://posting.local/api/v1/order
+curl -i -X GET http://posting.local/api/v1/order?client_id=3
+curl -i -X GET http://posting.local/api/v1/order?specialist_id=5
+curl -i -X GET http://posting.local/api/v1/order?date_from=2018-06-01 00:00:00
+curl -i -X GET http://posting.local/api/v1/order?date_to=2018-08-01 23:59:59
+curl -i -X GET http://posting.local/api/v1/order?status_client=1
+curl -i -X GET http://posting.local/api/v1/order?status_specialist=1
 curl -i -X GET http://posting.local/api/v1/order/2
 curl -i -X POST http://posting.local/api/v1/order -d '{"specialist_id":"5","date_from":"2018-07-15 16:00:00","date_to":"2018-07-15 17:00:00","client_id":"3","status_client":"1","status_specialist":"1"}'
 curl -i -X POST http://posting.local/api/v1/order -d '{"schedule_id":"7","client_id":"3","status_client":"1","status_specialist":"1"}'

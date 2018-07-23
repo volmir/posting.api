@@ -67,6 +67,10 @@ class ServiceController extends Controller {
             $this->get();
         } elseif (Yii::$app->request->method == 'POST') {
             $this->post();
+        } elseif (Yii::$app->request->method == 'PUT') {
+            $this->put();
+        } elseif (Yii::$app->request->method == 'PATCH') {
+            $this->patch();            
         } elseif (Yii::$app->request->method == 'DELETE') {
             $this->delete();            
         } else {
@@ -115,6 +119,61 @@ class ServiceController extends Controller {
             ApiException::set(400);
         }
     }
+    
+    private function put() {
+        $data = Yii::$app->request->post();
+        if ($this->row_id > 0 && !empty($data['price']) && !empty($data['currency_id'])) {
+            $service = Service::find()
+                    ->where([
+                        'id' => $this->row_id,
+                        'company_id' => $this->user->id,
+                        ])
+                    ->one();
+            if ($service instanceof Service) {
+                $service->price = $data['price'];
+                $service->currency_id = $data['currency_id'];
+                if ($service->save()) {
+                    ApiException::set(200);
+                } else {
+                    ApiException::set(400);
+                }
+            } else {
+                ApiException::set(404);
+            }
+        } else {
+            ApiException::set(400);
+        }
+    }
+
+    private function patch() {
+        $data = Yii::$app->request->post();
+        if ($this->row_id > 0 && (!empty($data['price']) || !empty($data['currency_id']))) {
+            $service = Service::find()
+                    ->where([
+                        'id' => $this->row_id,
+                        'company_id' => $this->user->id,
+                        ])
+                    ->one();
+            if ($service instanceof Service) {
+                if (!empty($data['price'])) {
+                    $service->price = $data['price'];
+                }
+                if (!empty($data['currency_id'])) {
+                    $service->currency_id = $data['currency_id'];
+                }
+
+                if ($service->save()) {
+                    ApiException::set(200);
+                } else {
+                    ApiException::set(400);
+                }
+            } else {
+                ApiException::set(404);
+            }
+        } else {
+            ApiException::set(400);
+        }
+    }    
     
     private function delete() {
         if ($this->row_id > 0) {

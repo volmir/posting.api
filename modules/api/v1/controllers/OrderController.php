@@ -119,6 +119,8 @@ class OrderController extends Controller {
         if ($where) {
             $orders = $orders->where($where);
         }
+        
+        $orders = $this->getOrdersWhere($orders);
 
         if ($this->row_id) {
             $orders = $orders->asArray()->one();
@@ -132,6 +134,31 @@ class OrderController extends Controller {
         $this->result = $orders;
     }
 
+    private function getOrdersWhere($orders) {
+        $data = Yii::$app->request->get();
+        
+        if (!empty($data['client_id'])) {
+            $orders = $orders->andWhere(['=', 'client_id', $data['client_id']]);
+        }
+        if (!empty($data['specialist_id'])) {
+            $orders = $orders->andWhere(['=', 'schedule.specialist_id', $data['specialist_id']]);
+        }
+        if (!empty($data['date_from'])) {
+            $orders = $orders->andWhere(['>=', 'schedule.date_from', $data['date_from']]);
+        }
+        if (!empty($data['date_to'])) {
+            $orders = $orders->andWhere(['<=', 'schedule.date_to', $data['date_to']]);
+        }
+        if (!empty($data['status_client'])) {
+            $orders = $orders->andWhere(['=', 'status_client', $data['status_client']]);
+        }
+        if (!empty($data['status_specialist'])) {
+            $orders = $orders->andWhere(['=', 'status_specialist', $data['status_specialist']]);
+        }
+        
+        return $orders;
+    }
+    
     private function addOrder() {
         $data = Yii::$app->request->post();
 

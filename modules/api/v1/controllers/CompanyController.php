@@ -9,6 +9,7 @@ use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
 use app\models\Company;
+use app\models\Specialist;
 use app\models\Upload;
 use app\models\User;
 
@@ -189,6 +190,7 @@ class CompanyController extends Controller {
                     if ($file_size < $max_size && $file_size > 0) {
                         $upload = new Upload();
                         $upload->user_id = $this->user->id;
+                        $upload->type = Upload::TYPE_IMAGE_PROFILE;
                         $upload->ext = $ext;
                         try {
                             if (!$upload->save()) {
@@ -224,4 +226,24 @@ class CompanyController extends Controller {
         return $this->result;
     }
 
+    public function actionSpecialist() {
+        $this->user = Authentification::verify();
+        Authentification::verifyByType($this->user, User::TYPE_COMPANY);        
+        
+        if (Yii::$app->request->method == 'GET') {
+            $specialist = User::find()
+                    ->select(['user.id', 'username', 'email', 'firstname', 'lastname', 'phone', 'status'])
+                    ->joinWith('specialist')
+                    ->where(['specialist.company_id' => $this->user->id]);
+            $specialist = $specialist
+                    ->asArray()
+                    ->all();
+
+            $this->result = $specialist;
+        } else {
+            ApiException::set(400);
+        }
+
+        return $this->result;
+    }    
 }

@@ -1,8 +1,11 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use leandrogehlen\treegrid\TreeGrid;
+use app\models\Category;
+use app\components\grid\SetColumn;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\rpg\models\TreeSearch */
@@ -30,8 +33,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'parentColumnName' => 'parent_id',
         'columns' => [
             'name',
+           [
+                'class' => SetColumn::className(),
+                'filter' => Category::getStatusesArray(),
+                'attribute' => 'status',
+                'name' => 'statusName',
+                'cssCLasses' => [
+                    Category::STATUS_WAIT => 'default',
+                    Category::STATUS_ACTIVE => 'success',
+                    Category::STATUS_BLOCKED => 'warning',
+                ],
+            ],
             ['class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} {delete} {add}',
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    return Url::to(['category/'.$action, 'id' => $model->id]);
+                },
                 'buttons' => [
                     'add' => function ($url, $model, $key)
                     {

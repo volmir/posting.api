@@ -16,6 +16,9 @@ use app\models\User;
  */
 class Upload extends \yii\db\ActiveRecord
 {
+    
+    const TYPE_IMAGE_PROFILE = 1;
+    
     /**
      * {@inheritdoc}
      */
