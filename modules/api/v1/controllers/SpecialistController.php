@@ -9,6 +9,7 @@ use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
 use app\models\Specialist;
+use app\models\User;
 
 class SpecialistController extends Controller {
 
@@ -55,16 +56,34 @@ class SpecialistController extends Controller {
         Authentification::verifyByType($this->user, UserApi::TYPE_SPECIALIST);
 
         if (Yii::$app->request->method == 'GET') {
-            $user = new \stdClass();
-            $user->id = $this->user->id;
-            $user->username = $this->user->username;
-            $user->email = $this->user->email;
-            $user->company_id = $this->user->specialist->company_id;
-            $user->firstname = $this->user->firstname;
-            $user->lastname = $this->user->lastname;
-            $user->created_at = $this->user->created_at;
+            
+            $user = User::find()
+                    ->with('specialist', 'uploads')
+                    ->where(['id' => $this->user->id])
+                    ->one();            
+            
+            $upload_files = [];
+            $uploads = $user->uploads;
+            if (!empty($uploads)) {
+                foreach ($uploads as $upload) {
+                    $upload_files[] = $upload->getWebFilePath(User::TYPE_SPECIALIST, $this->user->id);
+                }
+            }            
+            
+            $specialist = new \stdClass();
+            $specialist->id = $this->user->id;
+            $specialist->username = $this->user->username;
+            $specialist->email = $this->user->email;
+            $specialist->company_id = $this->user->specialist->company_id;
+            $specialist->firstname = $this->user->firstname;
+            $specialist->lastname = $this->user->lastname;
+            $specialist->description = $this->user->specialist->description;
+            $specialist->created_at = $this->user->created_at;
+            if (count($upload_files)) {
+                $specialist->uploads = $upload_files;
+            }
 
-            $this->result = $user;
+            $this->result = $specialist;
         } else {
             ApiException::set(400);
         }

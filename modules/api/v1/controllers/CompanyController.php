@@ -59,27 +59,33 @@ class CompanyController extends Controller {
 
         if (Yii::$app->request->method == 'GET') {
 
+            $user = User::find()
+                    ->with('company', 'uploads')
+                    ->where(['id' => $this->user->id])
+                    ->one();            
+            
             $upload_files = [];
-            $uploads = $this->user->uploads;
+            $uploads = $user->uploads;
             if (!empty($uploads)) {
                 foreach ($uploads as $upload) {
                     $upload_files[] = $upload->getWebFilePath(User::TYPE_COMPANY, $this->user->id);
                 }
             }
-
-            $user = new \stdClass();
-            $user->id = $this->user->id;
-            $user->username = $this->user->username;
-            $user->email = $this->user->email;
-            $user->phone = $this->user->phone;
-            $user->address = $this->user->company->address;
-            $user->description = $this->user->company->description;
-            $user->created_at = $this->user->created_at;
+            
+            $company = new \stdClass();
+            $company->id = $user->id;
+            $company->username = $user->username;
+            $company->email = $user->email;
+            $company->phone = $user->phone;
+            $company->fullname = $user->company->fullname;
+            $company->address = $user->company->address;
+            $company->description = $user->company->description;
+            $company->created_at = $user->created_at;
             if (count($upload_files)) {
-                $user->uploads = $upload_files;
+                $company->uploads = $upload_files;
             }
 
-            $this->result = $user;
+            $this->result = $company;
         } else {
             ApiException::set(400);
         }
@@ -107,6 +113,7 @@ class CompanyController extends Controller {
                     if ($user->save()) {
                         $company = new Company();
                         $company->id = $user->id;
+                        $company->fullname = (!empty($data['fullname']) ? $data['fullname'] : '');
                         $company->address = (!empty($data['address']) ? $data['address'] : '');
                         $company->description = (!empty($data['description']) ? $data['description'] : '');
                         try {
@@ -155,67 +162,6 @@ class CompanyController extends Controller {
                 } else {
                     ApiException::set(404);
                 }
-            } else {
-                ApiException::set(400);
-            }
-        } else {
-            ApiException::set(400);
-        }
-
-        return $this->result;
-    }
-
-    /**
-     * 
-     * @return stdClass
-     */
-    public function actionUpload() {
-        $this->user = Authentification::verify();
-        Authentification::verifyByType($this->user, User::TYPE_COMPANY);
-
-        if (!empty($_FILES)) {
-            $done_files = [];
-            $max_size = 2000 * 1024;
-            $valid_extentions = ["jpg", "png", "gif", "jpeg"];
-            $upload_dir = Yii::getAlias('@webroot') . Upload::getPath(User::TYPE_COMPANY, $this->user->id);
-
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0777);
-            }
-
-            foreach ($_FILES as $file) {
-                $file_size = filesize($file['tmp_name']);
-                $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-                if (in_array($ext, $valid_extentions)) {
-                    if ($file_size < $max_size && $file_size > 0) {
-                        $upload = new Upload();
-                        $upload->user_id = $this->user->id;
-                        $upload->type = Upload::TYPE_IMAGE_PROFILE;
-                        $upload->ext = $ext;
-                        try {
-                            if (!$upload->save()) {
-                                ApiException::set(400);
-                            }
-                        } catch (\RuntimeException $e) {
-                            ApiException::set(400);
-                        }
-
-                        $filename = $upload->getPrimaryKey() . '.' . $ext;
-
-                        if (move_uploaded_file($file['tmp_name'], $upload_dir . "/" . $filename)) {
-                            $done_files[] = realpath($upload_dir . "/" . $filename);
-                        }
-                    } else {
-                        Yii::$app->response->headers->set('Error', 'Incorrect image size');
-                    }
-                } else {
-                    Yii::$app->response->headers->set('Error', 'Incorrect image extention');
-                }
-            }
-
-            if (count($done_files)) {
-                Yii::$app->response->headers->set('Location', '/api/v1/company/');
-                ApiException::set(201);
             } else {
                 ApiException::set(400);
             }

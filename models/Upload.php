@@ -78,6 +78,10 @@ class Upload extends \yii\db\ActiveRecord
         $path = '/uploads/';        
         if ($type == User::TYPE_COMPANY) {
             $path .= 'company/';
+        } elseif ($type == User::TYPE_SPECIALIST) {
+            $path .= 'specialist/';
+        } elseif ($type == User::TYPE_CLIENT) {
+            $path .= 'client/';
         }
         $path .= substr(md5($id), 0, 12) . '/';
         

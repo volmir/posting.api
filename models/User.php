@@ -210,7 +210,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
      */    
     public function getCompany()
     {
-        return $this->hasMany(Company::className(), ['id' => 'id']);
+        return $this->hasOne(Company::className(), ['id' => 'id']);
     }    
 
     /**
@@ -218,7 +218,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
      */    
     public function getSpecialist()
     {
-        return $this->hasMany(Specialist::className(), ['id' => 'id']);
+        return $this->hasOne(Specialist::className(), ['id' => 'id']);
     }     
     
     /**
@@ -226,7 +226,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
      */    
     public function getClient()
     {
-        return $this->hasMany(Client::className(), ['id' => 'id']);
+        return $this->hasOne(Client::className(), ['id' => 'id']);
     }     
 
     /**

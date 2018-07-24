@@ -100,6 +100,8 @@ $config = [
                         'order/<id:\d+>' => 'order',
                         'schedule/<id:\d+>' => 'schedule',
                         'service/<id:\d+>' => 'service',
+                        'comment/<id:\d+>' => 'comment',
+                        'upload/<id:\d+>' => 'upload',
                         '<controller:\w+>' => '<controller>/index',
                         '<controller>/<action>' => '<controller>/<action>',
                     ],

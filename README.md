@@ -22,10 +22,9 @@ curl -i -X POST http://posting.local/api/v1/client/auth -d '{"username":"client"
 **Company**
 
 ```
-curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","phone":"(099) 376-43-29","address":"Kiev, 01001, Third st. 27, of. 709","description":"Company short description"}'
+curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","phone":"(099) 376-43-29","fullname":"AMT Commpany","address":"Kiev, 01001, Third st. 27, of. 709","description":"Company short description"}'
 curl -i -X GET http://posting.local/api/v1/company
 curl -i -X GET http://posting.local/api/v1/company/specialist
-curl --request POST --url http://posting.local/api/v1/company/upload --header 'Content-Type: application/x-www-form-urlencoded' --header 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' --form files=undefined
 ```
 
 **Specialist**
@@ -40,6 +39,14 @@ curl -i -X GET http://posting.local/api/v1/specialist
 ```
 curl -i -X POST http://posting.local/api/v1/client/create -d '{"username":"client865","password":"784832","email":"client865@example.com","firstname":"John","lastname":"Smith","phone":"(099) 376-43-29","description":"Description"}'
 curl -i -X GET http://posting.local/api/v1/client
+```
+
+**Uploads**
+
+```
+curl --request POST --url http://posting.local/api/v1/upload --header 'Content-Type: application/x-www-form-urlencoded' --header 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' --form file=undefined
+curl --request POST --url http://posting.local/api/v1/upload --header 'Content-Type: application/x-www-form-urlencoded' --header 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' --form file=undefined --form specialist_id=5
+curl -i -X DELETE http://posting.local/api/v1/upload/8
 ```
 
 **Categories**
@@ -90,6 +97,16 @@ curl -i -X POST http://posting.local/api/v1/order -d '{"specialist_id":"5","date
 curl -i -X POST http://posting.local/api/v1/order -d '{"schedule_id":"7","client_id":"3","status_client":"1","status_specialist":"1"}'
 curl -i -X PATCH http://posting.local/api/v1/order/9 -d '{"status_client":"2","status_specialist":"2"}'
 curl -i -X DELETE http://posting.local/api/v1/order/6
+```
+
+**Comments**
+
+```
+curl -i -X GET http://posting.local/api/v1/comment
+curl -i -X GET http://posting.local/api/v1/comment/1
+curl -i -X POST http://posting.local/api/v1/comment -d '{"specialist_id":"5","company_id":"4","text":"Comment text","rating":"4"}'
+curl -i -X PATCH http://posting.local/api/v1/comment/5 -d '{"text":"Comment full text","rating":"5"}'
+curl -i -X DELETE http://posting.local/api/v1/comment/4
 ```
 
 **Posts**

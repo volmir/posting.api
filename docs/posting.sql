@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июл 23 2018 г., 17:41
+-- Время создания: Июл 24 2018 г., 17:36
 -- Версия сервера: 5.7.22-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.30-0ubuntu0.16.04.1
 
@@ -88,6 +88,17 @@ CREATE TABLE `comment` (
   `client_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Дамп данных таблицы `comment`
+--
+
+INSERT INTO `comment` (`id`, `company_id`, `specialist_id`, `text`, `rating`, `created_at`, `client_id`) VALUES
+(1, 4, 5, 'Comment text', 3, '2018-07-24 10:31:36', 28),
+(2, 4, 37, 'Good work', 5, '2018-07-24 10:32:57', 28),
+(3, 4, NULL, 'Various versions have evolved over the years, sometimes by accident', 4, '2018-07-24 11:45:22', 28),
+(5, 4, 5, 'Comment full text', 5, '2018-07-24 14:27:10', 28),
+(6, 4, 5, 'Comment text', NULL, '2018-07-24 15:14:14', 28);
+
 -- --------------------------------------------------------
 
 --
@@ -96,6 +107,7 @@ CREATE TABLE `comment` (
 
 CREATE TABLE `company` (
   `id` int(10) UNSIGNED NOT NULL,
+  `fullname` varchar(512) DEFAULT NULL,
   `address` text,
   `description` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -104,10 +116,10 @@ CREATE TABLE `company` (
 -- Дамп данных таблицы `company`
 --
 
-INSERT INTO `company` (`id`, `address`, `description`) VALUES
-(4, 'Kiev, 01001, First st. 17, of. 307', 'Company description'),
-(39, 'Kharkov, 61000, Second st. 24, of. 218', 'Company short description'),
-(40, 'Kiev, 01001, Third st. 27, of. 709', 'Company detail description');
+INSERT INTO `company` (`id`, `fullname`, `address`, `description`) VALUES
+(4, 'ANT Company', 'Kiev, 01001, First st. 17, of. 307', 'Company description'),
+(39, 'Rent Agency', 'Kharkov, 61000, Second st. 24, of. 218', 'Company short description'),
+(40, 'Trade B2B', 'Kiev, 01001, Third st. 27, of. 709', 'Company detail description');
 
 -- --------------------------------------------------------
 
@@ -374,7 +386,10 @@ CREATE TABLE `upload` (
 INSERT INTO `upload` (`id`, `user_id`, `type`, `ext`) VALUES
 (1, 4, 1, 'jpg'),
 (2, 4, 1, 'jpg'),
-(3, 4, 1, 'jpg');
+(3, 4, 1, 'jpg'),
+(5, 4, 1, 'jpg'),
+(6, 5, 1, 'jpg'),
+(7, 5, 1, 'jpg');
 
 -- --------------------------------------------------------
 
@@ -558,7 +573,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT для таблицы `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT для таблицы `currency`
 --
@@ -603,7 +618,7 @@ ALTER TABLE `service`
 -- AUTO_INCREMENT для таблицы `upload`
 --
 ALTER TABLE `upload`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
