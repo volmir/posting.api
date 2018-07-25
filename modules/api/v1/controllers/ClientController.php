@@ -55,15 +55,15 @@ class ClientController extends Controller {
         Authentification::verifyByType($this->user, UserApi::TYPE_CLIENT);
 
         if (Yii::$app->request->method == 'GET') {
-            $user = new \stdClass();
-            $user->id = $this->user->id;
-            $user->username = $this->user->username;
-            $user->email = $this->user->email;
-            $user->firstname = $this->user->firstname;
-            $user->lastname = $this->user->lastname;
-            $user->created_at = $this->user->created_at;
+            $client = new \stdClass();
+            $client->id = $this->user->id;
+            $client->username = $this->user->username;
+            $client->email = $this->user->email;
+            $client->firstname = $this->user->firstname;
+            $client->lastname = $this->user->lastname;
+            $client->created_at = $this->user->created_at;
 
-            $this->result = $user;
+            $this->result = $client;
         } else {
             ApiException::set(400);
         }

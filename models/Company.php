@@ -31,11 +31,13 @@ class Company extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id'], 'integer'],
-            [['description'], 'string'],
+            [['id', 'country_id'], 'required'],
+            [['id', 'country_id'], 'integer'],
+            [['address', 'description'], 'string'],
+            [['fullname'], 'string', 'max' => 512],
             [['id'], 'unique'],
             [['id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id' => 'id']],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'id']],
         ];
     }
 
@@ -46,9 +48,13 @@ class Company extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'country_id' => 'Country ID',
+            'fullname' => 'Fullname',
+            'address' => 'Address',
             'description' => 'Description',
         ];
     }
+
 
     /**
      * @return \yii\db\ActiveQuery
@@ -58,6 +64,14 @@ class Company extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Country::className(), ['id' => 'country_id']);
+    }    
+    
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -81,4 +95,12 @@ class Company extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Specialist::className(), ['company_id' => 'id']);
     }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComments()
+    {
+        return $this->hasMany(Comment::className(), ['company_id' => 'id']);
+    }    
 }
