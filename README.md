@@ -22,7 +22,7 @@ curl -i -X POST http://posting.local/api/v1/client/auth -d '{"username":"client"
 **Company**
 
 ```
-curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","phone":"+380993762379","fullname":"AMT Commpany","address":"Kiev, 01001, Third st. 27, of. 709","description":"Company short description"}'
+curl -i -X POST http://posting.local/api/v1/company/create -d '{"username":"company837","password":"736239","email":"company@example.com","country_id":"248","phone":"+380993762379","fullname":"AMT Commpany","address":"Kiev, 01001, Third st. 27, of. 709","description":"Company short description"}'
 curl -i -X GET http://posting.local/api/v1/company
 curl -i -X GET http://posting.local/api/v1/company/specialist
 ```
@@ -75,8 +75,6 @@ curl -i -X GET http://posting.local/api/v1/schedule/2
 curl -i -X GET http://posting.local/api/v1/schedule?specialist_id=5
 curl -i -X GET http://posting.local/api/v1/schedule?date_from=2018-06-01&date_to=2018-08-01
 curl -i -X POST http://posting.local/api/v1/schedule -d '{"specialist_id":"5","date_from":"2018-07-15 14:00:00","date_to":"2018-07-15 15:00:00"}'
-curl -i -X PUT http://posting.local/api/v1/schedule/7 -d '{"specialist_id":"37","date_from":"2018-07-14 12:00:00","date_to":"2018-07-14 13:00:00"}'
-curl -i -X PATCH http://posting.local/api/v1/schedule/7 -d '{"date_from":"2018-07-14 17:00:00","date_to":"2018-07-14 18:00:00"}'
 curl -i -X DELETE http://posting.local/api/v1/schedule/8
 ```
 
@@ -93,10 +91,18 @@ curl -i -X GET http://posting.local/api/v1/order?date_to=2018-08-01 23:59:59
 curl -i -X GET http://posting.local/api/v1/order?status_client=1
 curl -i -X GET http://posting.local/api/v1/order?status_specialist=1
 curl -i -X GET http://posting.local/api/v1/order/2
-curl -i -X POST http://posting.local/api/v1/order -d '{"specialist_id":"5","date_from":"2018-07-15 16:00:00","date_to":"2018-07-15 17:00:00","client_id":"3","status_client":"1","status_specialist":"1"}'
-curl -i -X POST http://posting.local/api/v1/order -d '{"schedule_id":"7","client_id":"3","status_client":"1","status_specialist":"1"}'
+curl -i -X POST http://posting.local/api/v1/order -d '{"schedule_id":"7","client_id":"3","status_client":"1","status_specialist":"1","services":["2","5"]}'
 curl -i -X PATCH http://posting.local/api/v1/order/9 -d '{"status_client":"2","status_specialist":"2"}'
 curl -i -X DELETE http://posting.local/api/v1/order/6
+```
+
+**Session**
+
+```
+curl -i -X GET http://posting.local/api/v1/session/4
+curl -i -X GET http://posting.local/api/v1/session/4?specialist_id=5
+curl -i -X GET http://posting.local/api/v1/session/4?date_from=2018-06-01&date_to=2018-08-01
+curl -i -X GET http://posting.local/api/v1/session/4/schedule?date=2018-08-15&specialist_id=5
 ```
 
 **Comments**
@@ -120,18 +126,6 @@ curl -i -X PUT http://posting.local/api/v1/post/7 -d '{"title":"Another post tit
 curl -i -X PATCH http://posting.local/api/v1/post/7 -d '{"title":"Some post title"}'
 curl -i -X DELETE http://posting.local/api/v1/post/8
 ```
-
-**Posts (AJAX API URL's call examples)**
-
-```
-$.ajax({url: 'http://posting.local/api/v1/post', method: 'GET', dataType: 'json', success: function(response){console.log(response)}})
-$.ajax({url: 'http://posting.local/api/v1/post/1', method: 'GET', dataType: 'json', success: function(response){console.log(response)}})
-$.ajax({url: 'http://posting.local/api/v1/post', method: 'POST', data: {"title":"Another post name","content":"Another value of field type must be part of list: blue, red, green"}, dataType: 'json', success: function(response){console.log(response)}})
-$.ajax({url: 'http://posting.local/api/v1/post/7', method: 'PUT', data: {"title":"Another post title","content":"Another value of field type must be part of list: blue, red, green"}, dataType: 'json', success: function(response){console.log(response)}})
-$.ajax({url: 'http://posting.local/api/v1/post/7', method: 'PATCH', data: {title: "Some post title"}, dataType: 'json', success: function(response){console.log(response)}})
-$.ajax({url: 'http://posting.local/api/v1/post/8', method: 'DELETE', dataType: 'json', success: function(response){console.log(response)}})
-```
-
 
 ***Access right (RBAC)***
 

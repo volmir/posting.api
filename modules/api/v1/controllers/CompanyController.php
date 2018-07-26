@@ -9,6 +9,7 @@ use app\modules\api\v1\exceptions\ApiException;
 use app\modules\api\v1\models\Authentification;
 use app\models\user\SignupForm;
 use app\models\Company;
+use app\models\Country;
 use app\models\Specialist;
 use app\models\Upload;
 use app\models\User;
@@ -113,6 +114,7 @@ class CompanyController extends Controller {
                     if ($user->save()) {
                         $company = new Company();
                         $company->id = $user->id;
+                        $company->country_id = (!empty($data['country_id']) ? $data['country_id'] : Country::UKRAINE);
                         $company->fullname = (!empty($data['fullname']) ? $data['fullname'] : '');
                         $company->address = (!empty($data['address']) ? $data['address'] : '');
                         $company->description = (!empty($data['description']) ? $data['description'] : '');

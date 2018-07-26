@@ -89,6 +89,8 @@ $config = [
                         'service/<id:\d+>' => 'service',
                         'comment/<id:\d+>' => 'comment',
                         'upload/<id:\d+>' => 'upload',
+                        'session/<id:\d+>' => 'session',
+                        'session/<id:\d+>/schedule' => 'session/schedule',
                         '<controller:\w+>' => '<controller>/index',
                         '<controller>/<action>' => '<controller>/<action>',
                     ],

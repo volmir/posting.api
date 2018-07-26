@@ -119,7 +119,7 @@ class OrderController extends Controller {
         if ($where) {
             $orders = $orders->where($where);
         }
-        
+
         $orders = $this->getOrdersWhere($orders);
 
         if ($this->row_id) {
@@ -136,7 +136,7 @@ class OrderController extends Controller {
 
     private function getOrdersWhere($orders) {
         $data = Yii::$app->request->get();
-        
+
         if (!empty($data['client_id'])) {
             $orders = $orders->andWhere(['=', 'client_id', $data['client_id']]);
         }
@@ -155,20 +155,27 @@ class OrderController extends Controller {
         if (!empty($data['status_specialist'])) {
             $orders = $orders->andWhere(['=', 'status_specialist', $data['status_specialist']]);
         }
-        
+
         return $orders;
     }
-    
+
     private function addOrder() {
         $data = Yii::$app->request->post();
+        
+        if (empty($data['schedule_id'])) {
+            ApiException::set(400);
+        }
 
         $order = new Order();
         $order->client_id = (!empty($data['client_id']) ? $data['client_id'] : Client::VIRTUAL_CLIENT);
-        $order->schedule_id = $this->getScheduleId($data);
+        $order->schedule_id = $data['schedule_id'];
         $order->status_client = (!empty($data['status_client']) ? $data['status_client'] : OrderStatus::ADDED);
         $order->status_specialist = (!empty($data['status_specialist']) ? $data['status_specialist'] : OrderStatus::ADDED);
         try {
             if ($order->save()) {
+                if (!empty($data['services'])) {
+                    $this->addOrderService($data['services'], $order);
+                }
                 Yii::$app->response->headers->set('Location', '/api/v1/order/' . $order->getPrimaryKey());
                 ApiException::set(201);
             } else {
@@ -179,33 +186,16 @@ class OrderController extends Controller {
         }
     }
 
-    /**
-     * 
-     * @param array $data
-     * @return int
-     */
-    private function getScheduleId($data) {
-        if (!empty($data['schedule_id']) && $data['schedule_id'] > 0) {
-            $schedule_id = $data['schedule_id'];
-        } elseif (!empty($data['specialist_id']) && !empty($data['date_from']) && !empty($data['date_to'])) {
-            $schedule = new Schedule();
-            $schedule->specialist_id = $data['specialist_id'];
-            $schedule->date_from = $data['date_from'];
-            $schedule->date_to = $data['date_to'];
-            try {
-                if ($schedule->save()) {
-                    $schedule_id = $schedule->getPrimaryKey();
-                } else {
-                    ApiException::set(400);
-                }
-            } catch (\RuntimeException $e) {
-                ApiException::set(400);
+    private function addOrderService($services, $order) {
+        $company_id = $order->schedule->specialist->company_id;
+        if (count($services)) {
+            foreach ($services as $service_id) {
+                $order_service = new OrderService();
+                $order_service->order_id = $order->id;
+                $order_service->service_id = $service_id;
+                $order_service->save();
             }
-        } else {
-            ApiException::set(400);
         }
-
-        return $schedule_id;
     }
 
     /**
@@ -230,7 +220,7 @@ class OrderController extends Controller {
         if ($this->row_id > 0 && (!empty($data['status_client']) || !empty($data['status_specialist']))) {
 
             $order = Order::find();
-            
+
             if ($this->row_id) {
                 $where['order.id'] = $this->row_id;
             }

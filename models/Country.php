@@ -15,6 +15,9 @@ use Yii;
  */
 class Country extends \yii\db\ActiveRecord
 {
+    
+    const UKRAINE = 248;
+    
     /**
      * {@inheritdoc}
      */

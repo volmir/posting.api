@@ -113,7 +113,12 @@ class ScheduleController extends Controller {
             $schedule = $schedule->andWhere(['<=', 'date_to', $data['date_to']]);
         }
         
-        $schedule = $schedule->limit(1000)->all();
+        $schedule = $schedule
+                ->with('order.services')
+                ->orderBy(['id' => SORT_DESC])
+                ->limit(100)
+                ->asArray()
+                ->all();
 
         $this->result = $schedule;
     }
@@ -126,7 +131,7 @@ class ScheduleController extends Controller {
         }
 
         if (!empty($data['specialist_id']) && !empty($data['date_from']) && !empty($data['date_to'])
-                && $data['date_from'] < $data['date_to']) {
+                && strtotime($data['date_from']) < strtotime($data['date_to'])) {
             $schedule = Schedule::find()
                     ->where('(
                             (date_from <= :date_from AND date_to > :date_from) OR 
@@ -149,73 +154,6 @@ class ScheduleController extends Controller {
                 ApiException::set(201);
             } else {
                 ApiException::set(400);
-            }
-        } else {
-            ApiException::set(400);
-        }
-    }
-
-    private function put() {
-        $data = Yii::$app->request->post();
-        if ($this->row_id > 0 && !empty($data['specialist_id']) && !empty($data['date_from']) && !empty($data['date_to'])) {
-            $schedule = Schedule::find()
-                    ->where(['id' => $this->row_id])
-                    ->one();
-            if ($schedule instanceof Schedule) {
-                if ($this->user->id != $schedule->specialist_id && !UserApi::checkSpecialistCompany($schedule->specialist_id, $this->user)) {
-                    ApiException::set(400);
-                }
-                if ($this->user->id != $data['specialist_id'] && !UserApi::checkSpecialistCompany($data['specialist_id'], $this->user)) {
-                    ApiException::set(400);
-                }
-
-                $schedule->specialist_id = $data['specialist_id'];
-                $schedule->date_from = $data['date_from'];
-                $schedule->date_to = $data['date_to'];
-                if ($schedule->save()) {
-                    ApiException::set(200);
-                } else {
-                    ApiException::set(400);
-                }
-            } else {
-                ApiException::set(404);
-            }
-        } else {
-            ApiException::set(400);
-        }
-    }
-
-    private function patch() {
-        $data = Yii::$app->request->post();
-        if ($this->row_id > 0 && (!empty($data['specialist_id']) || !empty($data['date_from']) || !empty($data['date_to']))) {
-            $schedule = Schedule::find()
-                    ->where(['id' => $this->row_id])
-                    ->one();
-            if ($schedule instanceof Schedule) {
-                if ($this->user->id != $schedule->specialist_id && !UserApi::checkSpecialistCompany($schedule->specialist_id, $this->user)) {
-                    ApiException::set(400);
-                }
-
-                if (!empty($data['specialist_id'])) {
-                    if ($this->user->id != $data['specialist_id'] && !UserApi::checkSpecialistCompany($data['specialist_id'], $this->user)) {
-                        ApiException::set(400);
-                    }
-                    $schedule->specialist_id = $data['specialist_id'];
-                }
-                if (!empty($data['date_from'])) {
-                    $schedule->date_from = $data['date_from'];
-                }
-                if (!empty($data['date_to'])) {
-                    $schedule->date_to = $data['date_to'];
-                }
-
-                if ($schedule->save()) {
-                    ApiException::set(200);
-                } else {
-                    ApiException::set(400);
-                }
-            } else {
-                ApiException::set(404);
             }
         } else {
             ApiException::set(400);
