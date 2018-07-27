@@ -15,6 +15,8 @@ use app\models\Upload;
 use app\models\User;
 
 class UploadController extends Controller {
+    
+    const ORIGINAL_FOLDER = 'original';
 
     /**
      *
@@ -27,13 +29,13 @@ class UploadController extends Controller {
      * @var app\modules\api\v1\models\User
      */
     protected $user;
-    
+
     /**
      *
      * @var int
      */
-    protected $row_id;  
-    
+    protected $row_id;
+
     /**
      *
      * @var int
@@ -78,12 +80,12 @@ class UploadController extends Controller {
         if (Yii::$app->request->method == 'POST') {
             $this->post();
         } elseif (Yii::$app->request->method == 'DELETE') {
-            $this->delete();            
+            $this->delete();
         } else {
             ApiException::set(400);
-        }        
+        }
     }
-    
+
     private function post() {
         if (!empty($_FILES)) {
             foreach ($_FILES as $file) {
@@ -97,9 +99,9 @@ class UploadController extends Controller {
             }
         } else {
             ApiException::set(400);
-        }        
+        }
     }
-    
+
     private function delete() {
         if ($this->row_id > 0) {
             $upload = Upload::find()
@@ -117,9 +119,9 @@ class UploadController extends Controller {
             }
         } else {
             ApiException::set(400);
-        }        
+        }
     }
-    
+
     /**
      * 
      * @param Upload $upload
@@ -129,7 +131,8 @@ class UploadController extends Controller {
         $upload_dir = $this->getUploadDir($upload->user);
         $filename = $upload->getPrimaryKey() . '.' . $upload->ext;
         $file = $upload_dir . '/' . $filename;
-        if (unlink($file)) {
+        $file_original = $upload_dir . self::ORIGINAL_FOLDER . '/' . $filename;
+        if (unlink($file) && unlink($file_original)) {
             return true;
         } else {
             return false;
@@ -160,10 +163,16 @@ class UploadController extends Controller {
 
         $filename = $upload->getPrimaryKey() . '.' . $file_ext;
 
-        if (!move_uploaded_file($file['tmp_name'], $upload_dir . "/" . $filename)) {
+        if (!move_uploaded_file($file['tmp_name'], $upload_dir . self::ORIGINAL_FOLDER . "/" . $filename)) {
             Yii::$app->response->headers->set('Error', 'File ' . $file['name'] . ' is not uploaded');
+            
             return false;
         } else {
+            $source_path = $upload_dir . self::ORIGINAL_FOLDER . "/" . $filename;
+            $destination_path = $upload_dir . $filename;
+            $new_width = 250;
+            $this->imageResize($source_path, $destination_path, $new_width, false, 90);
+            
             return true;
         }
     }
@@ -190,7 +199,7 @@ class UploadController extends Controller {
             $user->id = $specialist->id;
             $user->type = User::TYPE_SPECIALIST;
         }
-        
+
         return $user;
     }
 
@@ -204,6 +213,9 @@ class UploadController extends Controller {
 
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777);
+        }
+        if (!is_dir($upload_dir . self::ORIGINAL_FOLDER)) {
+            mkdir($upload_dir . self::ORIGINAL_FOLDER, 0777);
         }
 
         return $upload_dir;
@@ -238,6 +250,44 @@ class UploadController extends Controller {
         $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
         return $file_ext;
+    }
+
+    protected function imageResize($source_path, $destination_path, $newwidth, $newheight = false, $quality = false) {
+
+        ini_set("gd.jpeg_ignore_warning", 1); 
+
+        list($oldwidth, $oldheight, $type) = getimagesize($source_path);
+
+        switch ($type) {
+            case IMAGETYPE_JPEG: $typestr = 'jpeg';
+                break;
+            case IMAGETYPE_GIF: $typestr = 'gif';
+                break;
+            case IMAGETYPE_PNG: $typestr = 'png';
+                break;
+        }
+        $function = "imagecreatefrom" . $typestr;
+        $src_resource = $function($source_path);
+
+        if (!$newheight) {
+            $newheight = round($newwidth * $oldheight / $oldwidth);
+        } elseif (!$newwidth) {
+            $newwidth = round($newheight * $oldwidth / $oldheight);
+        }
+        $destination_resource = imagecreatetruecolor($newwidth, $newheight);
+
+        imagecopyresampled($destination_resource, $src_resource, 0, 0, 0, 0, $newwidth, $newheight, $oldwidth, $oldheight);
+
+        if ($type = 2) {
+            imageinterlace($destination_resource, 1); 
+            imagejpeg($destination_resource, $destination_path, $quality);
+        } else {
+            $function = "image" . $typestr;
+            $function($destination_resource, $destination_path);
+        }
+
+        imagedestroy($destination_resource);
+        imagedestroy($src_resource);
     }
 
 }
