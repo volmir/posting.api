@@ -85,8 +85,7 @@ class PromotionController extends Controller {
     }
 
     private function get() {
-        $pomotion = Promotion::find()
-                ->andWhere(['<', 'date_end', date('Y-m-d H:i:s')]);
+        $pomotion = Promotion::find();
         if ($this->row_id) {
             $pomotion = $pomotion->andWhere(['=', 'id', $this->row_id]);
         }
