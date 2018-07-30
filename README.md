@@ -102,6 +102,7 @@ curl -i -X DELETE http://posting.local/api/v1/order/6
 curl -i -X GET http://posting.local/api/v1/orderservice?order_id=11
 curl -i -X POST http://posting.local/api/v1/orderservice?order_id=11 -d '{"services":["2","3","5"]}'
 curl -i -X DELETE http://posting.local/api/v1/orderservice/12
+```
 
 **Session**
 
