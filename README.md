@@ -96,6 +96,13 @@ curl -i -X PATCH http://posting.local/api/v1/order/9 -d '{"status_client":"2","s
 curl -i -X DELETE http://posting.local/api/v1/order/6
 ```
 
+**Order Services**
+
+```
+curl -i -X GET http://posting.local/api/v1/orderservice?order_id=11
+curl -i -X POST http://posting.local/api/v1/orderservice?order_id=11 -d '{"services":["2","3","5"]}'
+curl -i -X DELETE http://posting.local/api/v1/orderservice/12
+
 **Session**
 
 ```
@@ -113,6 +120,16 @@ curl -i -X GET http://posting.local/api/v1/comment/1
 curl -i -X POST http://posting.local/api/v1/comment -d '{"specialist_id":"5","company_id":"4","text":"Comment text","rating":"4"}'
 curl -i -X PATCH http://posting.local/api/v1/comment/5 -d '{"text":"Comment full text","rating":"5"}'
 curl -i -X DELETE http://posting.local/api/v1/comment/4
+```
+
+**Promotions**
+
+```
+curl -i -X GET http://posting.local/api/v1/promotion
+curl -i -X GET http://posting.local/api/v1/promotion/2
+curl -i -X POST http://posting.local/api/v1/promotion -d '{"title":"Promotion program","description":"Promotion full description","service_id":"1","price":"28.39","currency_id":"1","discount":"15","date_start":"2018-06-25","date_end":"2018-09-25"}'
+curl -i -X PATCH http://posting.local/api/v1/promotion/3 -d '{"title":"Promotion action","description":"Promotion detail description","service_id":"2","price":"36.31","currency_id":"1","discount":"12","date_start":"2018-06-24","date_end":"2018-09-26"}'
+curl -i -X DELETE http://posting.local/api/v1/promotion/4
 ```
 
 **Posts**

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 26, 2018 at 05:32 PM
+-- Generation Time: Jul 30, 2018 at 04:20 PM
 -- Server version: 5.7.22-0ubuntu0.16.04.1
 -- PHP Version: 7.0.30-0ubuntu0.16.04.1
 
@@ -522,6 +522,9 @@ INSERT INTO `order_vs_service` (`id`, `order_id`, `service_id`) VALUES
 (3, 2, 1),
 (4, 4, 2),
 (5, 4, 3),
+(10, 11, 2),
+(11, 11, 3),
+(13, 11, 5),
 (6, 15, 2),
 (7, 15, 5);
 
@@ -586,6 +589,34 @@ INSERT INTO `post_vs_category` (`id`, `post_id`, `category_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `promotion`
+--
+
+CREATE TABLE `promotion` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `company_id` int(10) UNSIGNED NOT NULL,
+  `service_id` int(10) UNSIGNED DEFAULT NULL,
+  `title` varchar(500) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `currency_id` int(10) UNSIGNED DEFAULT NULL,
+  `discount` tinyint(4) UNSIGNED DEFAULT NULL,
+  `date_start` datetime DEFAULT NULL,
+  `date_end` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `promotion`
+--
+
+INSERT INTO `promotion` (`id`, `company_id`, `service_id`, `title`, `description`, `price`, `currency_id`, `discount`, `date_start`, `date_end`) VALUES
+(1, 4, NULL, 'Action title', 'Promo description', NULL, NULL, NULL, '2018-07-30 15:26:12', '2018-08-30 15:26:14'),
+(2, 4, 1, 'Promotion program', 'Promotion full description', '28.39', 1, 15, '2018-06-25 00:00:00', '2018-09-25 00:00:00'),
+(3, 4, 2, 'Promotion action', 'Promotion detail description', '36.31', 3, 12, '2018-06-24 00:00:00', '2018-09-26 00:00:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `schedule`
 --
 
@@ -602,18 +633,18 @@ CREATE TABLE `schedule` (
 
 INSERT INTO `schedule` (`id`, `specialist_id`, `date_from`, `date_to`) VALUES
 (1, 5, '2018-07-16 13:48:28', '2018-07-16 13:48:31'),
-(2, 5, '2018-08-16 12:50:26', '2018-07-16 12:50:34'),
-(3, 37, '2018-08-16 17:07:53', '2018-07-16 17:07:55'),
-(4, 5, '2018-08-15 16:00:00', '2018-07-15 17:00:00'),
+(2, 5, '2018-08-16 12:50:26', '2018-08-16 12:50:34'),
+(3, 37, '2018-08-16 17:07:53', '2018-08-16 17:07:55'),
+(4, 5, '2018-08-15 16:00:00', '2018-08-15 17:00:00'),
 (7, 37, '2018-07-17 14:53:46', '2018-07-17 14:53:48'),
-(9, 5, '2018-08-15 14:00:00', '2018-07-15 15:00:00'),
-(10, 37, '2018-08-15 14:00:00', '2018-07-15 15:00:00'),
+(9, 5, '2018-08-15 14:00:00', '2018-08-15 15:00:00'),
+(10, 37, '2018-08-15 14:00:00', '2018-08-15 15:00:00'),
 (11, 37, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
 (13, 5, '2018-07-15 17:00:00', '2018-07-15 18:00:00'),
-(15, 5, '2018-08-15 18:00:00', '2018-07-15 19:00:00'),
+(15, 5, '2018-08-15 18:00:00', '2018-08-15 19:00:00'),
 (20, 5, '2018-07-15 19:30:00', '2018-07-15 19:31:00'),
 (21, 37, '2018-07-15 16:00:00', '2018-07-15 17:00:00'),
-(22, 5, '2018-08-14 18:30:00', '2018-07-14 19:30:00'),
+(22, 5, '2018-08-14 18:30:00', '2018-08-14 19:30:00'),
 (23, 37, '2018-07-14 18:30:00', '2018-07-14 19:30:00'),
 (24, 37, '2018-08-14 18:30:00', '2018-08-14 19:30:00');
 
@@ -684,7 +715,8 @@ INSERT INTO `upload` (`id`, `user_id`, `type`, `ext`) VALUES
 (3, 4, 1, 'jpg'),
 (5, 4, 1, 'jpg'),
 (6, 5, 1, 'jpg'),
-(7, 5, 1, 'jpg');
+(7, 5, 1, 'jpg'),
+(18, 5, 1, 'jpg');
 
 -- --------------------------------------------------------
 
@@ -821,6 +853,17 @@ ALTER TABLE `post_vs_category`
   ADD KEY `FK_posts_vs_categories_categories` (`category_id`);
 
 --
+-- Indexes for table `promotion`
+--
+ALTER TABLE `promotion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `company_id` (`company_id`),
+  ADD KEY `service_id` (`service_id`),
+  ADD KEY `currency_id` (`currency_id`),
+  ADD KEY `date_start` (`date_start`),
+  ADD KEY `date_end` (`date_end`);
+
+--
 -- Indexes for table `schedule`
 --
 ALTER TABLE `schedule`
@@ -900,7 +943,7 @@ ALTER TABLE `order_status`
 -- AUTO_INCREMENT for table `order_vs_service`
 --
 ALTER TABLE `order_vs_service`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `post`
 --
@@ -911,6 +954,11 @@ ALTER TABLE `post`
 --
 ALTER TABLE `post_vs_category`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `promotion`
+--
+ALTER TABLE `promotion`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `schedule`
 --
@@ -925,7 +973,7 @@ ALTER TABLE `service`
 -- AUTO_INCREMENT for table `upload`
 --
 ALTER TABLE `upload`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `user`
 --
@@ -988,6 +1036,14 @@ ALTER TABLE `post`
 ALTER TABLE `post_vs_category`
   ADD CONSTRAINT `FK_posts_vs_categories_categories` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_posts_vs_categories_posts` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `promotion`
+--
+ALTER TABLE `promotion`
+  ADD CONSTRAINT `promotion_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `promotion_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `promotion_ibfk_3` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `schedule`
