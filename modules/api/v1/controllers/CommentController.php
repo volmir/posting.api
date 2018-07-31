@@ -25,6 +25,11 @@ class CommentController extends Controller {
      * @var int
      */
     private $limit = 50;    
+    /**
+     *
+     * @var int
+     */
+    private $offset = 0;    
 
     /**
      *
@@ -85,6 +90,9 @@ class CommentController extends Controller {
     }
 
     private function get() {
+        $data = Yii::$app->request->get();
+        $this->setLimitOffset($data);
+        
         $comment = Comment::find()
                 ->joinWith(['client.user clnt', 'specialist.user splt', 'company.user cmpn']);
         $comment = $this->getWhereUserType($comment);
@@ -94,6 +102,7 @@ class CommentController extends Controller {
         $comment = $comment
                 ->orderBy(['comment.id' => SORT_DESC])
                 ->limit($this->limit)
+                ->offset($this->offset)
                 ->asArray()
                 ->all();
         
@@ -245,6 +254,15 @@ class CommentController extends Controller {
         }
         
         return $comment;
+    }
+
+    private function setLimitOffset($data = []) {
+        if (!empty($data['limit'])) {
+            $this->limit = $data['limit'];
+        }
+        if (!empty($data['offset'])) {
+            $this->offset = $data['offset'];
+        }
     }
 
 }

@@ -117,6 +117,7 @@ curl -i -X GET http://posting.local/api/v1/session/4/schedule?date=2018-08-15&sp
 
 ```
 curl -i -X GET http://posting.local/api/v1/comment
+curl -i -X GET http://posting.local/api/v1/comment?limit=10&offset=20
 curl -i -X GET http://posting.local/api/v1/comment/1
 curl -i -X POST http://posting.local/api/v1/comment -d '{"specialist_id":"5","company_id":"4","text":"Comment text","rating":"4"}'
 curl -i -X PATCH http://posting.local/api/v1/comment/5 -d '{"text":"Comment full text","rating":"5"}'
@@ -131,6 +132,16 @@ curl -i -X GET http://posting.local/api/v1/promotion/2
 curl -i -X POST http://posting.local/api/v1/promotion -d '{"title":"Promotion program","description":"Promotion full description","service_id":"1","price":"28.39","currency_id":"1","discount":"15","date_start":"2018-06-25","date_end":"2018-09-25"}'
 curl -i -X PATCH http://posting.local/api/v1/promotion/3 -d '{"title":"Promotion action","description":"Promotion detail description","service_id":"2","price":"36.31","currency_id":"1","discount":"12","date_start":"2018-06-24","date_end":"2018-09-26"}'
 curl -i -X DELETE http://posting.local/api/v1/promotion/4
+```
+
+**Maillists**
+
+```
+curl -i -X GET http://posting.local/api/v1/maillist
+curl -i -X GET http://posting.local/api/v1/maillist/2
+curl -i -X POST http://posting.local/api/v1/maillist -d '{"title":"Email maillist","text":"Maillist full description","type":"1"}'
+curl -i -X PATCH http://posting.local/api/v1/maillist/3 -d '{"title":"SMS maillist","text":"Maillist detail description"}'
+curl -i -X DELETE http://posting.local/api/v1/maillist/4
 ```
 
 **Posts**

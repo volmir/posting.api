@@ -93,6 +93,7 @@ $config = [
                         'session/<id:\d+>' => 'session',
                         'session/<id:\d+>/schedule' => 'session/schedule',
                         'promotion/<id:\d+>' => 'promotion',
+                        'maillist/<id:\d+>' => 'maillist',
                         '<controller:\w+>' => '<controller>/index',
                         '<controller>/<action>' => '<controller>/<action>',
                     ],
