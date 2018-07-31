@@ -47,7 +47,7 @@ class CurrencyController extends Controller {
 
             $this->result = $currency;
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;

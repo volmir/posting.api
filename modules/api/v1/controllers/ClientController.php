@@ -65,7 +65,7 @@ class ClientController extends Controller {
 
             $this->result = $client;
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;
@@ -111,7 +111,7 @@ class ClientController extends Controller {
                 ApiException::set(400);
             }
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;
@@ -142,7 +142,7 @@ class ClientController extends Controller {
                 ApiException::set(400);
             }
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;

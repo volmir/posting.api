@@ -85,7 +85,7 @@ class SpecialistController extends Controller {
 
             $this->result = $specialist;
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;
@@ -131,7 +131,7 @@ class SpecialistController extends Controller {
                 ApiException::set(400);
             }
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;
@@ -162,7 +162,7 @@ class SpecialistController extends Controller {
                 ApiException::set(400);
             }
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;

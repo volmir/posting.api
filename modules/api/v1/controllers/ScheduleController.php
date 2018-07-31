@@ -75,7 +75,7 @@ class ScheduleController extends Controller {
         } elseif (Yii::$app->request->method == 'DELETE') {
             $this->delete();
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;

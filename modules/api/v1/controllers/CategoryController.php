@@ -57,7 +57,7 @@ class CategoryController extends Controller {
         } elseif (Yii::$app->request->method == 'POST') {
             $this->post();
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;

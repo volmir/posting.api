@@ -70,7 +70,7 @@ class SessionController extends Controller {
         if (Yii::$app->request->method == 'GET') {
             $this->get();
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;

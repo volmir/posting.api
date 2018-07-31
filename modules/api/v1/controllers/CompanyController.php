@@ -88,7 +88,7 @@ class CompanyController extends Controller {
 
             $this->result = $company;
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;
@@ -137,7 +137,7 @@ class CompanyController extends Controller {
                 ApiException::set(400);
             }
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;
@@ -168,7 +168,7 @@ class CompanyController extends Controller {
                 ApiException::set(400);
             }
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;
@@ -189,7 +189,7 @@ class CompanyController extends Controller {
 
             $this->result = $specialist;
         } else {
-            ApiException::set(400);
+            ApiException::set(405);
         }
 
         return $this->result;
