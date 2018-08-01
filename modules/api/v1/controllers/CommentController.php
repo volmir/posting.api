@@ -56,9 +56,11 @@ class CommentController extends Controller {
             'class' => \yii\filters\Cors::className(),
             'cors' => [
                 'Origin' => ['*'],
-                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                 'Access-Control-Allow-Credentials' => true,
                 'Access-Control-Max-Age' => 7200,
+                'Access-Control-Allow-Origin' => ['*'],
+                'Access-Control-Allow-Headers' => ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
             ],
         ];
 

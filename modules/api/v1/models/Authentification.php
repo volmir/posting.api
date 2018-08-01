@@ -28,7 +28,7 @@ class Authentification {
      * @param User $user
      * @param int $type_id
      */
-    public function verifyByType($user, $type_id) {
+    public static function verifyByType($user, $type_id) {
         if ($user->type != $type_id) {
             ApiException::set(401);
         }
